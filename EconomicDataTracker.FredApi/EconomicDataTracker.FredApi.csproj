@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Program.cs~RF94fd1d7d.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+    <PackageReference Include="NReco.Logging.File" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EconomicDataTracker.Common.Config\EconomicDataTracker.Common.Config.csproj" />
+    <ProjectReference Include="..\EconomicDataTracker.Common.Logging\EconomicDataTracker.Common.Logging.csproj" />
+    <ProjectReference Include="..\EconomicDataTracker.Common.Requests\EconomicDataTracker.Common.Requests.csproj" />
+    <ProjectReference Include="..\EconomicDataTracker.Entities\EconomicDataTracker.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

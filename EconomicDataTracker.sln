@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.FredApi", "EconomicDataTracker.FredApi\EconomicDataTracker.FredApi.csproj", "{36989DAF-6EB8-4B13-B0AA-2A129A47A7CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.Common.Config", "EconomicDataTracker.Common.Config\EconomicDataTracker.Common.Config.csproj", "{0F412816-D4D4-4C99-B841-56A5287476A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.Common.Logging", "EconomicDataTracker.Common.Logging\EconomicDataTracker.Common.Logging.csproj", "{EBD7D023-1410-4390-B7E3-44E3B389A2D0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.Common.Requests", "EconomicDataTracker.Common.Requests\EconomicDataTracker.Common.Requests.csproj", "{2495127E-BE91-43B2-A53B-12EA87DFF6CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.UnitTests", "EconomicDataTracker.Tests\EconomicDataTracker.UnitTests.csproj", "{0AE91DB3-BB06-47F5-80F4-D81D8B3A1823}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.Entities", "EconomicDataTracker.Entities\EconomicDataTracker.Entities.csproj", "{5BD5F256-9D75-4213-B0BF-294AD78C8534}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36989DAF-6EB8-4B13-B0AA-2A129A47A7CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36989DAF-6EB8-4B13-B0AA-2A129A47A7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36989DAF-6EB8-4B13-B0AA-2A129A47A7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36989DAF-6EB8-4B13-B0AA-2A129A47A7CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F412816-D4D4-4C99-B841-56A5287476A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F412816-D4D4-4C99-B841-56A5287476A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F412816-D4D4-4C99-B841-56A5287476A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F412816-D4D4-4C99-B841-56A5287476A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBD7D023-1410-4390-B7E3-44E3B389A2D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD7D023-1410-4390-B7E3-44E3B389A2D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD7D023-1410-4390-B7E3-44E3B389A2D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD7D023-1410-4390-B7E3-44E3B389A2D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2495127E-BE91-43B2-A53B-12EA87DFF6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2495127E-BE91-43B2-A53B-12EA87DFF6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2495127E-BE91-43B2-A53B-12EA87DFF6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2495127E-BE91-43B2-A53B-12EA87DFF6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE91DB3-BB06-47F5-80F4-D81D8B3A1823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE91DB3-BB06-47F5-80F4-D81D8B3A1823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE91DB3-BB06-47F5-80F4-D81D8B3A1823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE91DB3-BB06-47F5-80F4-D81D8B3A1823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BD5F256-9D75-4213-B0BF-294AD78C8534}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BD5F256-9D75-4213-B0BF-294AD78C8534}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BD5F256-9D75-4213-B0BF-294AD78C8534}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BD5F256-9D75-4213-B0BF-294AD78C8534}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79BD8E22-569C-4AFA-8A0D-CB1324D6FB9C}
+	EndGlobalSection
+EndGlobal
