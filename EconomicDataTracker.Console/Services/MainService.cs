@@ -1,24 +1,21 @@
-﻿using EconomicDataTracker.Common.Config;
-using EconomicDataTracker.Common.Logging;
-using EconomicDataTracker.Common.Requests;
+﻿using System.Text.Json;
+using EconomicDataTracker.Console.Models;
+using EconomicDataTracker.Console.Requesters;
 using EconomicDataTracker.Entities.Data;
 using EconomicDataTracker.Entities.Models;
-using EconomicDataTracker.FredApi.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
-namespace EconomicDataTracker.FredApi.Services
+namespace EconomicDataTracker.Console.Services
 {
     public class MainService
     {
-        private readonly FredRequestManager _fredRequestManager;
+        private readonly FredApiRequester _fredApiRequester;
         private readonly ApplicationContext _context;
         private readonly ILogger<MainService> _logger;
 
-        public MainService(FredRequestManager fredRequestManager, ApplicationContext context, ILogger<MainService> logger)
+        public MainService(FredApiRequester fredApiRequester, ApplicationContext context, ILogger<MainService> logger)
         {
-            _fredRequestManager = fredRequestManager;
+            _fredApiRequester = fredApiRequester;
             _context = context;
             _logger = logger;
         }
@@ -27,7 +24,7 @@ namespace EconomicDataTracker.FredApi.Services
         {
             try
             {
-                var jsonData = await _fredRequestManager.FetchDataAsync();
+                var jsonData = await _fredApiRequester.FetchDataAsync();
                 var fredData = JsonSerializer.Deserialize<FredApiResponse>(jsonData);
 
                 foreach (var observation in fredData.Observations)

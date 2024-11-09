@@ -15,8 +15,11 @@ namespace EconomicDataTracker.Entities.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cpi>()
+                .Property(c => c.Value)
+                .HasPrecision(18, 4); // Adjust precision and scale as needed
+
             base.OnModelCreating(modelBuilder);
-            // Configure model properties, relationships, etc. here if needed
         }
     }
 }

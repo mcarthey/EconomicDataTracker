@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace EconomicDataTracker.Entities.Helpers
+namespace EconomicDataTracker.Common.Entities.Helpers
 {
     public static class ConfigurationHelper
     {
-        public static IConfigurationRoot GetConfiguration(string basePath = null, string environmentName = null)
+        public static IConfigurationRoot GetConfiguration(string? basePath = null, string environmentName = null)
         {
-            basePath ??= Directory.GetCurrentDirectory();
+            // Set the base path to the shared configuration folder
+            basePath ??= Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "SharedConfig");
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath)
@@ -26,7 +27,11 @@ namespace EconomicDataTracker.Entities.Helpers
 
         public static void ConfigureDbContextOptions(DbContextOptionsBuilder optionsBuilder, string connectionString)
         {
-            optionsBuilder.UseSqlServer(connectionString)
+            optionsBuilder.UseSqlServer(connectionString, options =>
+                {
+                    // Specify the migrations assembly to centralize migrations in EconomicDataTracker.Migrations
+                    options.MigrationsAssembly("EconomicDataTracker.Migrations");
+                })
                 .UseLazyLoadingProxies();
         }
     }

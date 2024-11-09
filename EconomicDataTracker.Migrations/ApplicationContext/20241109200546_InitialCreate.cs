@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EconomicDataTracker.Entities.Migrations
+namespace EconomicDataTracker.Migrations.ApplicationContext
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -18,7 +18,7 @@ namespace EconomicDataTracker.Entities.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Value = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,14 +1,15 @@
-﻿using EconomicDataTracker.FredApi.Services;
+﻿using EconomicDataTracker.Console.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EconomicDataTracker.FredApi
+namespace EconomicDataTracker.Console
 {
     public static class Program
     {
         private static async Task Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
-            Startup.ConfigureServices(serviceCollection);
+            var startup = new Startup();
+            startup.ConfigureServices(serviceCollection);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 

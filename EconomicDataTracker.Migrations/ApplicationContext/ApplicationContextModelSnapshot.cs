@@ -4,19 +4,16 @@ using EconomicDataTracker.Entities.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace EconomicDataTracker.Entities.Migrations
+namespace EconomicDataTracker.Migrations.ApplicationContext
 {
-    [DbContext(typeof(ApplicationContext))]
-    [Migration("20241108170124_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(Entities.Data.ApplicationContext))]
+    partial class ApplicationContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +37,8 @@ namespace EconomicDataTracker.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
 

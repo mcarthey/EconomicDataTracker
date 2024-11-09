@@ -1,7 +1,7 @@
 ﻿using EconomicDataTracker.Entities.Data;
 using EconomicDataTracker.Entities.Models;
 
-namespace EconomicDataTracker.FredApi.Services
+namespace EconomicDataTracker.Console.Services
 {
     public class CpiService
     {

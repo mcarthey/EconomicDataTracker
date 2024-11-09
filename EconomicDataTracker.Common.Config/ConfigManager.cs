@@ -1,28 +1,42 @@
-﻿namespace EconomicDataTracker.Common.Config
+﻿using Microsoft.EntityFrameworkCore;
+using EconomicDataTracker.Common.Config.Models;
+using EconomicDataTracker.Common.Config.Data;
+
+namespace EconomicDataTracker.Common.Config
 {
     public class ConfigManager
     {
-        private readonly Dictionary<string, string> _configurations;
+        private readonly DbContextOptions<ConfigContext> _dbOptions;
 
-        public ConfigManager()
+        public ConfigManager(DbContextOptions<ConfigContext> dbOptions)
         {
-            _configurations = LoadConfigurationsFromDatabase();
+            _dbOptions = dbOptions;
+
+            using var context = new ConfigContext(_dbOptions);
+            context.Database.Migrate();
         }
 
         public string GetConfiguration(string key)
         {
-            return _configurations.ContainsKey(key) ? _configurations[key] : null;
+            using var context = new ConfigContext(_dbOptions);
+            var entry = context.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
+            return entry?.Value;
         }
 
-        private Dictionary<string, string> LoadConfigurationsFromDatabase()
+        public void SetConfiguration(string key, string value)
         {
-            // Replace with actual DB code to fetch configurations
-            return new Dictionary<string, string>
+            using var context = new ConfigContext(_dbOptions);
+            var entry = context.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
+            if (entry == null)
             {
-                { "FredApiKey", "ADD API KEY" },
-                { "FredBaseUrl", "https://api.stlouisfed.org/fred/series/observations" },
-                { "ObservationStart", "1980-01-01" }
-            };
+                entry = new ConfigurationEntry { Key = key, Value = value };
+                context.ConfigurationEntries.Add(entry);
+            }
+            else
+            {
+                entry.Value = value;
+            }
+            context.SaveChanges();
         }
     }
 }

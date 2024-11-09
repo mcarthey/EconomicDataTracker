@@ -1,12 +1,11 @@
-﻿using System.Net.Http;
-using EconomicDataTracker.Common.Config;
-using Microsoft.EntityFrameworkCore;
+﻿using EconomicDataTracker.Common.Config;
+using EconomicDataTracker.Common.Requests;
 
-namespace EconomicDataTracker.Common.Requests
+namespace EconomicDataTracker.Console.Requesters
 {
-    public class FredRequestManager : RequestManager
+    public class FredApiRequester : RequestManager
     {
-        public FredRequestManager(HttpClient httpClient, ConfigManager configManager)
+        public FredApiRequester(HttpClient httpClient, ConfigManager configManager)
             : base(httpClient, configManager)
         {
         }

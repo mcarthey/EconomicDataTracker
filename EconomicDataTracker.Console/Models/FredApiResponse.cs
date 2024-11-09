@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EconomicDataTracker.FredApi.Models;
+namespace EconomicDataTracker.Console.Models;
 
 public class FredApiResponse
 {
