@@ -15,12 +15,7 @@ namespace EconomicDataTracker.Console.Requesters
             var baseUrl = ConfigManager.GetConfiguration("FredBaseUrl");
             var apiKey = ConfigManager.GetConfiguration("FredApiKey");
             var seriesId = "CPIAUCSL"; // Consumer Price Index
-
-            // TODO will need to pass in the value to avoid adding a dependency on the DbContext
-            //var lastRecord = _dbContext.CPIs.OrderByDescending(c => c.Date).FirstOrDefault();
-            //var observationStart = lastRecord != null ? lastRecord.Date.AddDays(1).ToString("yyyy-MM-dd") : "1980-01-01";
-
-            var observationStart = ConfigManager.GetConfiguration("ObservationStart"); // e.g., "1980-01-01"
+            var observationStart = ConfigManager.GetConfiguration("LastObservationDate"); // e.g., "1980-01-01"
 
             var url = $"{baseUrl}?series_id={seriesId}&api_key={apiKey}&file_type=json&observation_start={observationStart}";
             return url;
@@ -36,5 +31,7 @@ namespace EconomicDataTracker.Console.Requesters
         {
             return await ExecuteRequestAsync();
         }
+
+
     }
 }

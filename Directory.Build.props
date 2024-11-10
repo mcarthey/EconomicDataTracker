@@ -1,0 +1,8 @@
+<!-- Directory.Build.props -->
+<Project>
+  <PropertyGroup>
+    <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+    <SolutionName>EconomicDataTracker</SolutionName>
+    <SolutionPath>$(SolutionDir)EconomicDataTracker.sln</SolutionPath>
+  </PropertyGroup>
+</Project>

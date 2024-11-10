@@ -9,16 +9,11 @@ namespace EconomicDataTracker.Entities.Data
         {
         }
 
-        public DbSet<Cpi> Cpis { get; set; }
-
-        // Add DbSets for other models like InterestRate, CommodityPrice
+        public DbSet<FredObservation> FredObservations { get; set; }
+        public DbSet<FredSeries> FredSeries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Cpi>()
-                .Property(c => c.Value)
-                .HasPrecision(18, 4); // Adjust precision and scale as needed
-
             base.OnModelCreating(modelBuilder);
         }
     }

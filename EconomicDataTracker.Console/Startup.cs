@@ -1,6 +1,7 @@
 ﻿using EconomicDataTracker.Common.Config;
 using EconomicDataTracker.Common.Config.Data;
 using EconomicDataTracker.Common.Entities;
+using EconomicDataTracker.Console.Mappers;
 using EconomicDataTracker.Console.Requesters;
 using EconomicDataTracker.Console.Services;
 using EconomicDataTracker.Entities.Data;
@@ -23,8 +24,10 @@ namespace EconomicDataTracker.Console
 
             // Register application-specific services
             services.AddTransient<FredApiRequester>();
-            services.AddTransient<CpiService>();
+            services.AddTransient<FredObservationRepository>();
+            services.AddTransient<FredObservationMapper>();
             services.AddTransient<MainService>();
+            services.AddScoped<UnitOfWork>();
             services.AddSingleton<ConfigManager>();
         }
     }

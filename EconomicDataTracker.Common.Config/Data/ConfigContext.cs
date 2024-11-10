@@ -9,13 +9,5 @@ namespace EconomicDataTracker.Common.Config.Data
 
         public DbSet<ConfigurationEntry> ConfigurationEntries { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ConfigurationEntry>()
-                .HasIndex(e => e.Key)
-                .IsUnique();
-
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }

@@ -12,7 +12,7 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,5 +28,27 @@
   <ItemGroup>
     <Folder Include="Configs\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Migrations\ApplicationContext\Scripts\SeedFredSeries.rollback.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Migrations\ApplicationContext\Scripts\SeedFredSeries.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+	<PropertyGroup>
+		<PostBuildEvent>
+			xcopy /Y /I "$(SolutionDir)SharedConfig\appsettings.Dev.json" "$(ProjectDir)Configs\"
+		</PostBuildEvent>
+	</PropertyGroup>
+
+	<Target Name="PrintProperties" AfterTargets="PostBuildEvent">
+		<Message Text="SolutionDir: $(SolutionDir)" Importance="high" />
+		<Message Text="ProjectDir: $(ProjectDir)" Importance="high" />
+		<Message Text="SolutionName: $(SolutionName)" Importance="high" />
+		<Message Text="SolutionPath: $(SolutionPath)" Importance="high" />
+	</Target>
 
 </Project>

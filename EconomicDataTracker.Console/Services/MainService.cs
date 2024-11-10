@@ -1,52 +1,68 @@
-﻿using System.Text.Json;
-using EconomicDataTracker.Console.Models;
+﻿using EconomicDataTracker.Console.Mappers;
 using EconomicDataTracker.Console.Requesters;
 using EconomicDataTracker.Entities.Data;
-using EconomicDataTracker.Entities.Models;
 using Microsoft.Extensions.Logging;
+using EconomicDataTracker.Common.Config;
 
 namespace EconomicDataTracker.Console.Services
 {
     public class MainService
     {
         private readonly FredApiRequester _fredApiRequester;
-        private readonly ApplicationContext _context;
+        private readonly UnitOfWork _unitOfWork;
+        private readonly FredObservationMapper _mapper;
         private readonly ILogger<MainService> _logger;
+        private readonly ConfigManager _configManager;
 
-        public MainService(FredApiRequester fredApiRequester, ApplicationContext context, ILogger<MainService> logger)
+        public MainService(FredApiRequester fredApiRequester, UnitOfWork unitOfWork, FredObservationMapper mapper, ILogger<MainService> logger, ConfigManager configManager)
         {
             _fredApiRequester = fredApiRequester;
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _logger = logger;
+            _configManager = configManager;
         }
 
         public async Task RunAsync()
         {
             try
             {
-                var jsonData = await _fredApiRequester.FetchDataAsync();
-                var fredData = JsonSerializer.Deserialize<FredApiResponse>(jsonData);
-
-                foreach (var observation in fredData.Observations)
+                if (!IsLastObservationDateInThePast())
                 {
-                    if (decimal.TryParse(observation.Value, out var value) && DateTime.TryParse(observation.Date, out var date))
-                    {
-                        var cpiRecord = new Cpi
-                        {
-                            Date = date,
-                            Value = value
-                        };
-                        _context.Cpis.Add(cpiRecord);
-                    }
+                    _logger.LogInformation("No new data to process.");
+                    return;
                 }
 
-                await _context.SaveChangesAsync();
+                var jsonData = await _fredApiRequester.FetchDataAsync();
+                var observations = _mapper.MapFromJson(jsonData);
+
+                foreach (var observation in observations)
+                {
+                    _unitOfWork.FredObservationRepository.AddObservationRecord(observation.Date, observation.Value);
+                }
+                await _unitOfWork.SaveChangesAsync();
+
+                _configManager.SetConfiguration("LastObservationDate", DateTime.Now.ToString("yyyy-MM-dd"));
                 _logger.LogInformation("Data successfully saved to the database.");
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while saving data to the database.");
             }
+        }
+
+        public bool IsLastObservationDateInThePast()
+        {
+            var lastObservationDateStr = _configManager.GetConfiguration("LastObservationDate");
+            if (DateTime.TryParse(lastObservationDateStr, out var lastObservationDate))
+            {
+                if (lastObservationDate >= DateTime.Now.Date)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
