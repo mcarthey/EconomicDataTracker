@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EconomicDataTracker.Migrati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedConfig", "SharedConfig", "{41264711-658E-4231-BDCA-8B8172358D87}"
 	ProjectSection(SolutionItems) = preProject
-		SharedConfig\appsettings.json = SharedConfig\appsettings.json
+		SharedConfig\appsettings.Dev.json = SharedConfig\appsettings.Dev.json
 	EndProjectSection
 EndProject
 Global

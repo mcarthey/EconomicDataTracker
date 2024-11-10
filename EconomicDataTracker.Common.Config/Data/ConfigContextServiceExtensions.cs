@@ -1,5 +1,4 @@
 ﻿using EconomicDataTracker.Common.Entities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EconomicDataTracker.Common.Config.Data

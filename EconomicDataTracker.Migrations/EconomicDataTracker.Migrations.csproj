@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\SharedConfig\appsettings.Dev.json" Link="Configs\appsettings.Dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +23,10 @@
     <ProjectReference Include="..\EconomicDataTracker.Common.Config\EconomicDataTracker.Common.Config.csproj" />
     <ProjectReference Include="..\EconomicDataTracker.Common.Entities\EconomicDataTracker.Common.Entities.csproj" />
     <ProjectReference Include="..\EconomicDataTracker.Entities\EconomicDataTracker.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configs\" />
   </ItemGroup>
 
 </Project>

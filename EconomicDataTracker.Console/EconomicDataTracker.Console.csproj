@@ -12,6 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\SharedConfig\appsettings.Dev.json" Link="Configs\appsettings.Dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
     <PackageReference Include="NReco.Logging.File" Version="1.2.1" />
@@ -23,6 +29,10 @@
     <ProjectReference Include="..\EconomicDataTracker.Common.Logging\EconomicDataTracker.Common.Logging.csproj" />
     <ProjectReference Include="..\EconomicDataTracker.Common.Requests\EconomicDataTracker.Common.Requests.csproj" />
     <ProjectReference Include="..\EconomicDataTracker.Entities\EconomicDataTracker.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configs\" />
   </ItemGroup>
 
 </Project>
