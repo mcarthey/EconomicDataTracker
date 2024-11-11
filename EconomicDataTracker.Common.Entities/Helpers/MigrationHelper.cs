@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using EconomicDataTracker.Common.Entities;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 public static class MigrationHelper
 {

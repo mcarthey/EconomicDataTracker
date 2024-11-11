@@ -1,8 +1,9 @@
 ﻿using EconomicDataTracker.Console.Mappers;
 using EconomicDataTracker.Console.Requesters;
-using EconomicDataTracker.Entities.Data;
 using Microsoft.Extensions.Logging;
-using EconomicDataTracker.Common.Config;
+using EconomicDataTracker.Entities.Repositories;
+using EconomicDataTracker.Common.Config.Repositories;
+using EconomicDataTracker.Entities.Models;
 
 namespace EconomicDataTracker.Console.Services
 {
@@ -12,38 +13,51 @@ namespace EconomicDataTracker.Console.Services
         private readonly UnitOfWork _unitOfWork;
         private readonly FredObservationMapper _mapper;
         private readonly ILogger<MainService> _logger;
-        private readonly ConfigManager _configManager;
+        private readonly ConfigRepository _configRepository;
 
-        public MainService(FredApiRequester fredApiRequester, UnitOfWork unitOfWork, FredObservationMapper mapper, ILogger<MainService> logger, ConfigManager configManager)
+        public MainService(FredApiRequester fredApiRequester, UnitOfWork unitOfWork, FredObservationMapper mapper, ILogger<MainService> logger, ConfigRepository configRepository)
         {
             _fredApiRequester = fredApiRequester;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
-            _configManager = configManager;
+            _configRepository = configRepository;
         }
 
         public async Task RunAsync()
         {
             try
             {
-                if (!IsLastObservationDateInThePast())
+                var allEnabledSeries = await GetAllEnabledSeriesAsync();
+
+                foreach (var series in allEnabledSeries)
                 {
-                    _logger.LogInformation("No new data to process.");
-                    return;
+                    var seriesId = series.Id;
+                    var seriesName = series.Name;
+
+                    var lastUpdatedDate = GetLastTrackedUpdatedDate(seriesId);
+
+                    if (!IsLastUpdatedDateInThePast(lastUpdatedDate))
+                    {
+                        _logger.LogInformation($"No new data to process for series {seriesName}.");
+                        continue;
+                    }
+
+                    var jsonData = await _fredApiRequester.FetchDataAsync(seriesName, lastUpdatedDate);
+                    var observations = _mapper.MapFromJson(jsonData);
+
+                    foreach (var observation in observations)
+                    {
+                        _unitOfWork.FredObservationRepository.AddObservationRecord(observation.Date, observation.Value, seriesId);
+                    }
+
+                    _unitOfWork.FredObservationUpdateTrackerRepository.AddOrUpdateAsync(seriesId, DateTime.Now);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    _logger.LogInformation($"Data successfully saved to the database for series {seriesName}.");
+
                 }
-
-                var jsonData = await _fredApiRequester.FetchDataAsync();
-                var observations = _mapper.MapFromJson(jsonData);
-
-                foreach (var observation in observations)
-                {
-                    _unitOfWork.FredObservationRepository.AddObservationRecord(observation.Date, observation.Value);
-                }
-                await _unitOfWork.SaveChangesAsync();
-
-                _configManager.SetConfiguration("LastObservationDate", DateTime.Now.ToString("yyyy-MM-dd"));
-                _logger.LogInformation("Data successfully saved to the database.");
+                _logger.LogInformation("All observations processed and saved to the database.");
 
             }
             catch (Exception ex)
@@ -52,15 +66,21 @@ namespace EconomicDataTracker.Console.Services
             }
         }
 
-        public bool IsLastObservationDateInThePast()
+        public async Task<IEnumerable<FredSeries>> GetAllEnabledSeriesAsync()
         {
-            var lastObservationDateStr = _configManager.GetConfiguration("LastObservationDate");
-            if (DateTime.TryParse(lastObservationDateStr, out var lastObservationDate))
+            return await _unitOfWork.FredSeriesRepository.FindAsync(x => x.Enabled == true);
+        }
+
+        public DateTime GetLastTrackedUpdatedDate(int seriesId)
+        {
+            return _unitOfWork.FredObservationUpdateTrackerRepository.GetLastUpdatedDateBySeries(seriesId);
+        }
+
+        public bool IsLastUpdatedDateInThePast(DateTime lastUpdatedDate)
+        {
+            if (lastUpdatedDate >= DateTime.Now.Date)
             {
-                if (lastObservationDate >= DateTime.Now.Date)
-                {
-                    return false;
-                }
+                return false;
             }
             return true;
         }

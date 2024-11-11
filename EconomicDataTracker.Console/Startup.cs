@@ -1,10 +1,11 @@
-﻿using EconomicDataTracker.Common.Config;
-using EconomicDataTracker.Common.Config.Data;
+﻿using EconomicDataTracker.Common.Config.Data;
+using EconomicDataTracker.Common.Config.Repositories;
 using EconomicDataTracker.Common.Entities;
 using EconomicDataTracker.Console.Mappers;
 using EconomicDataTracker.Console.Requesters;
 using EconomicDataTracker.Console.Services;
 using EconomicDataTracker.Entities.Data;
+using EconomicDataTracker.Entities.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EconomicDataTracker.Console
@@ -25,10 +26,12 @@ namespace EconomicDataTracker.Console
             // Register application-specific services
             services.AddTransient<FredApiRequester>();
             services.AddTransient<FredObservationRepository>();
+            services.AddTransient<FredSeriesRepository>();
+            services.AddTransient<FredObservationUpdateTrackerRepository>();
             services.AddTransient<FredObservationMapper>();
             services.AddTransient<MainService>();
             services.AddScoped<UnitOfWork>();
-            services.AddSingleton<ConfigManager>();
+            services.AddSingleton<ConfigRepository>();
         }
     }
 

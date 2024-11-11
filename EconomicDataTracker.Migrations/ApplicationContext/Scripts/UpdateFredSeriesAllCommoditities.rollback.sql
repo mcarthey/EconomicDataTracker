@@ -1,0 +1,1 @@
+﻿UPDATE FredSeries SET Name='WPU00000000' WHERE Name='PPIACO'

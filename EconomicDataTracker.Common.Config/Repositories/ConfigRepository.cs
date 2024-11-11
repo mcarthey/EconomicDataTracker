@@ -1,13 +1,13 @@
 ﻿using EconomicDataTracker.Common.Config.Models;
 using EconomicDataTracker.Common.Config.Data;
 
-namespace EconomicDataTracker.Common.Config
+namespace EconomicDataTracker.Common.Config.Repositories
 {
-    public class ConfigManager
+    public class ConfigRepository
     {
         private readonly ConfigDbContext _dbContext;
 
-        public ConfigManager(ConfigDbContext dbContext)
+        public ConfigRepository(ConfigDbContext dbContext)
         {
             _dbContext = dbContext;
         }

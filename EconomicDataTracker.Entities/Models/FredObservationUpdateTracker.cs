@@ -2,13 +2,10 @@
 
 namespace EconomicDataTracker.Entities.Models
 {
-    public class FredObservation
+    public class FredObservationUpdateTracker
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
-
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal Value { get; set; } 
+        public DateTime LastUpdatedDate { get; set; }
 
         // navigation property
         public virtual FredSeries FredSeries { get; set; }

@@ -1,5 +1,4 @@
-﻿using EconomicDataTracker.Common.Entities.Helpers;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EconomicDataTracker.Common.Entities
 {

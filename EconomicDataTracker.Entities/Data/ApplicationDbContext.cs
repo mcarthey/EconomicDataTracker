@@ -11,6 +11,7 @@ namespace EconomicDataTracker.Entities.Data
 
         public DbSet<FredObservation> FredObservations { get; set; }
         public DbSet<FredSeries> FredSeries { get; set; }
+        public DbSet<FredObservationUpdateTracker> FredObservationUpdateTrackers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

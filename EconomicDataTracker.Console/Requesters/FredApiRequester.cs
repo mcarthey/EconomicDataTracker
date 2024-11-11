@@ -1,23 +1,25 @@
-﻿using EconomicDataTracker.Common.Config;
+﻿using EconomicDataTracker.Common.Config.Repositories;
 using EconomicDataTracker.Common.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace EconomicDataTracker.Console.Requesters
 {
     public class FredApiRequester : RequestManager
     {
-        public FredApiRequester(HttpClient httpClient, ConfigManager configManager)
-            : base(httpClient, configManager)
+        private readonly ILogger<FredApiRequester> _logger;
+
+        public FredApiRequester(HttpClient httpClient, ConfigRepository configRepository, ILogger<FredApiRequester> logger)
+            : base(httpClient, configRepository, logger)
         {
+            _logger = logger;
         }
 
-        protected override string GetUrl()
+        protected override string GetBaseUrl()
         {
-            var baseUrl = ConfigManager.GetConfiguration("FredBaseUrl");
-            var apiKey = ConfigManager.GetConfiguration("FredApiKey");
-            var seriesId = "CPIAUCSL"; // Consumer Price Index
-            var observationStart = ConfigManager.GetConfiguration("LastObservationDate"); // e.g., "1980-01-01"
+            var baseUrl = ConfigRepository.GetConfiguration("FredBaseUrl");
+            var apiKey = ConfigRepository.GetConfiguration("FredApiKey");
 
-            var url = $"{baseUrl}?series_id={seriesId}&api_key={apiKey}&file_type=json&observation_start={observationStart}";
+            var url = $"{baseUrl}?api_key={apiKey}&file_type=json";
             return url;
         }
 
@@ -27,9 +29,9 @@ namespace EconomicDataTracker.Console.Requesters
             return null;
         }
 
-        public async Task<string> FetchDataAsync()
+        public async Task<string> FetchDataAsync(string seriesName, DateTime lastUpdatedDate)
         {
-            return await ExecuteRequestAsync();
+            return await ExecuteRequestAsync(seriesName, lastUpdatedDate);
         }
 
 

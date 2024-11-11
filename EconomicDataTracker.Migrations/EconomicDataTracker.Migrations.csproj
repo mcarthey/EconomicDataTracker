@@ -30,10 +30,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ApplicationContext\Scripts\UpdateFredSeriesAllCommoditities.rollback.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ApplicationContext\Scripts\UpdateFredSeriesAllCommoditities.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ApplicationContext\Scripts\SeedFredSeries.rollback.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="ApplicationContext\Scripts\SeedFredSeries.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ConfigContext\Scripts\SeedConfigEntries.rollback.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ConfigContext\Scripts\SeedConfigEntries.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
