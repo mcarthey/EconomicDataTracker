@@ -8,7 +8,7 @@ namespace EconomicDataTracker.Entities.Data
         public static IServiceCollection AddApplicationContext(this IServiceCollection services)
         {
             // Use the generic AddDbContext method from Common.Entities to register ApplicationContext
-            return services.AddDbContext<ApplicationContext>();
+            return services.AddDbContext<ApplicationDbContext>();
         }
     }
 }

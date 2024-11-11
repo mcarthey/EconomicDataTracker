@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EconomicDataTracker.Common.Config.Data
 {
-    public class ConfigContext : DbContext
+    public class ConfigDbContext : DbContext
     {
-        public ConfigContext(DbContextOptions<ConfigContext> options) : base(options) { }
+        public ConfigDbContext(DbContextOptions<ConfigDbContext> options) : base(options) { }
 
         public DbSet<ConfigurationEntry> ConfigurationEntries { get; set; }
 

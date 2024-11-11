@@ -33,9 +33,11 @@ param (
 switch ($ContextName) {
     "ApplicationContext" {
         $projectPath = "EconomicDataTracker.Migrations"
+		$context = "ApplicationDbContext"
     }
     "ConfigContext" {
         $projectPath = "EconomicDataTracker.Migrations"
+		$context = "ConfigDbContext"
     }
     default {
         Write-Host "Invalid context name. Please use 'ApplicationContext' or 'ConfigContext'."
@@ -44,7 +46,7 @@ switch ($ContextName) {
 }
 
 # Construct the base command for updating the database
-$command = "dotnet ef database update --context $ContextName --project $projectPath"
+$command = "dotnet ef database update --context $Context --project $projectPath"
 
 # Append the migration name if provided
 if ($MigrationName -ne "") {

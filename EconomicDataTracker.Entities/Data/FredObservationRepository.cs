@@ -4,17 +4,17 @@ namespace EconomicDataTracker.Entities.Data
 {
     public class FredObservationRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly ApplicationDbContext _dbContext;
 
-        public FredObservationRepository(ApplicationContext context)
+        public FredObservationRepository(ApplicationDbContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public void AddObservationRecord(DateTime date, decimal value)
         {
             var cpiRecord = new FredObservation { Date = date, Value = value };
-            _context.FredObservations.Add(cpiRecord);
+            _dbContext.FredObservations.Add(cpiRecord);
         }
     }
 }

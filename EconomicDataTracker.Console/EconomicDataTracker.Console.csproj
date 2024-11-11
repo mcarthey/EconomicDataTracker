@@ -36,4 +36,17 @@
     <Folder Include="Mappers\" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<PostBuildEvent>
+			xcopy /Y /I /F "$(SolutionDir)SharedConfig\appsettings.Dev.json" "$(ProjectDir)Configs\"
+		</PostBuildEvent>
+	</PropertyGroup>
+
+	<Target Name="PrintProperties" AfterTargets="PostBuildEvent">
+		<Message Text="SolutionDir: $(SolutionDir)" Importance="high" />
+		<Message Text="ProjectDir: $(ProjectDir)" Importance="high" />
+		<Message Text="SolutionName: $(SolutionName)" Importance="high" />
+		<Message Text="SolutionPath: $(SolutionPath)" Importance="high" />
+	</Target>
+
 </Project>

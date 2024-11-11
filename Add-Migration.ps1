@@ -33,13 +33,13 @@ param (
 switch ($ContextName) {
     "ApplicationContext" {
         $projectPath = "EconomicDataTracker.Migrations"
-        $outputDir = "Migrations/$ContextName"
-        $namespace = "EconomicDataTracker.Entities.Data.Migrations"
+        $outputDir = "ApplicationContext"
+		$context = "ApplicationDbContext"
     }
     "ConfigContext" {
         $projectPath = "EconomicDataTracker.Migrations"
-        $outputDir = "Migrations/$ContextName"
-        $namespace = "EconomicDataTracker.Common.Config.Data.Migrations"
+        $outputDir = "ConfigContext"
+		$context = "ConfigDbContext"
     }
     default {
         Write-Host "Invalid context name. Please use 'ApplicationContext' or 'ConfigContext'."
@@ -49,8 +49,8 @@ switch ($ContextName) {
 
 # Add migration
 Write-Host "Adding migration '$MigrationName' for context '$ContextName'..."
-dotnet ef migrations add $MigrationName `
-    --context $ContextName `
-    --project $projectPath `
-    --output-dir $outputDir `
-    --namespace $namespace
+$command = "dotnet ef migrations add $MigrationName --context $Context --project $projectPath --output-dir $outputDir"
+
+# Display and run the command
+Write-Host "Running: $command"
+Invoke-Expression $command

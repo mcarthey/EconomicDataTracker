@@ -29,9 +29,11 @@ param (
 switch ($ContextName) {
     "ApplicationContext" {
         $projectPath = "EconomicDataTracker.Migrations"
+		$context = "ApplicationDbContext"
     }
     "ConfigContext" {
         $projectPath = "EconomicDataTracker.Migrations"
+		$context = "ConfigDbContext"
     }
     default {
         Write-Host "Invalid context name. Please use 'ApplicationContext' or 'ConfigContext'."
@@ -41,6 +43,8 @@ switch ($ContextName) {
 
 # Remove the last migration
 Write-Host "Removing the last migration for context '$ContextName'..."
-dotnet ef migrations remove `
-    --context $ContextName `
-    --project $projectPath
+$command = "dotnet ef migrations remove  --context $Context --project $projectPath"
+
+# Display and run the command
+Write-Host "Running: $command"
+Invoke-Expression $command

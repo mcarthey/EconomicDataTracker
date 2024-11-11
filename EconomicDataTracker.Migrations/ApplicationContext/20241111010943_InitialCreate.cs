@@ -1,8 +1,9 @@
-﻿#nullable disable
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EconomicDataTracker.Migrations.Migrations.ApplicationContext
+#nullable disable
+
+namespace EconomicDataTracker.Migrations.ApplicationContext
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -30,17 +30,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Migrations\ApplicationContext\Scripts\SeedFredSeries.rollback.sql">
+    <None Update="ApplicationContext\Scripts\SeedFredSeries.rollback.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Migrations\ApplicationContext\Scripts\SeedFredSeries.sql">
+    <None Update="ApplicationContext\Scripts\SeedFredSeries.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
 	<PropertyGroup>
 		<PostBuildEvent>
-			xcopy /Y /I "$(SolutionDir)SharedConfig\appsettings.Dev.json" "$(ProjectDir)Configs\"
+			xcopy /Y /I /F "$(SolutionDir)SharedConfig\appsettings.Dev.json" "$(ProjectDir)Configs\"
 		</PostBuildEvent>
 	</PropertyGroup>
 

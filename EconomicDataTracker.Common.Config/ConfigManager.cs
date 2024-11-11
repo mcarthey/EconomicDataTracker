@@ -5,32 +5,32 @@ namespace EconomicDataTracker.Common.Config
 {
     public class ConfigManager
     {
-        private readonly ConfigContext _context;
+        private readonly ConfigDbContext _dbContext;
 
-        public ConfigManager(ConfigContext context)
+        public ConfigManager(ConfigDbContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public string GetConfiguration(string key)
         {
-            var entry = _context.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
+            var entry = _dbContext.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
             return entry?.Value;
         }
 
         public void SetConfiguration(string key, string value)
         {
-            var entry = _context.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
+            var entry = _dbContext.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
             if (entry == null)
             {
                 entry = new ConfigurationEntry { Key = key, Value = value };
-                _context.ConfigurationEntries.Add(entry);
+                _dbContext.ConfigurationEntries.Add(entry);
             }
             else
             {
                 entry.Value = value;
             }
-            _context.SaveChanges();
+            _dbContext.SaveChanges();
         }
     }
 }

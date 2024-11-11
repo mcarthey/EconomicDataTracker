@@ -2,11 +2,11 @@ namespace EconomicDataTracker.Entities.Data
 {
     public class UnitOfWork : IDisposable
     {
-        private readonly ApplicationContext _context;
+        private readonly ApplicationDbContext _dbContext;
 
-        public UnitOfWork(ApplicationContext context, FredObservationRepository fredObservationRepository)
+        public UnitOfWork(ApplicationDbContext dbContext, FredObservationRepository fredObservationRepository)
         {
-            _context = context;
+            _dbContext = dbContext;
             FredObservationRepository = fredObservationRepository;
         }
 
@@ -14,12 +14,12 @@ namespace EconomicDataTracker.Entities.Data
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public void Dispose()
         {
-            _context.Dispose();
+            _dbContext.Dispose();
         }
     }
 }

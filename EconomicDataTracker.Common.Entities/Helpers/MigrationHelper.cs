@@ -22,7 +22,7 @@ public static class MigrationHelper
         string contextName = GetContextName();
 
         // Build the path to the SQL script, including the contextName in the path
-        string scriptPath = Path.Combine(assemblyLocation, "Migrations", contextName, "Scripts", scriptFileName);
+        string scriptPath = Path.Combine(assemblyLocation, contextName, "Scripts", scriptFileName);
 
         // Check if the file exists
         if (!File.Exists(scriptPath))
@@ -51,7 +51,7 @@ public static class MigrationHelper
         if (namespaceParts != null && namespaceParts.Length > 2)
         {
             // Typically, the third part might represent the context name, adjust based on your structure
-            return namespaceParts[3]; // Adjusted this index based on your naming conventions
+            return namespaceParts[2]; // Adjusted this index based on your naming conventions
         }
 
         throw new InvalidOperationException("Could not determine the DbContext from the migration class namespace.");

@@ -2,7 +2,7 @@
 
 namespace EconomicDataTracker.Migrations.ApplicationContext
 {
-    public class ApplicationContextDesignTimeFactory : GenericDbContextFactory<Entities.Data.ApplicationContext>
+    public class ApplicationContextDesignTimeFactory : GenericDbContextFactory<Entities.Data.ApplicationDbContext>
     {
     }
 }

@@ -1,9 +1,9 @@
-﻿#nullable disable
-
-using EconomicDataTracker.Common.Entities;
+﻿using EconomicDataTracker.Common.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EconomicDataTracker.Migrations.Migrations.ApplicationContext
+#nullable disable
+
+namespace EconomicDataTracker.Migrations.ApplicationContext
 {
     /// <inheritdoc />
     public partial class SeedFredSeries : BaseMigration
@@ -18,7 +18,6 @@ namespace EconomicDataTracker.Migrations.Migrations.ApplicationContext
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             RunSqlRollback(migrationBuilder);
-
         }
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EconomicDataTracker.Entities.Data
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
