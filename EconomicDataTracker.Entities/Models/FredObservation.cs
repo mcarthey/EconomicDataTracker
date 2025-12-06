@@ -8,10 +8,10 @@ namespace EconomicDataTracker.Entities.Models
         public DateTime Date { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Value { get; set; } 
+        public decimal Value { get; set; }
 
         // navigation property
-        public virtual FredSeries FredSeries { get; set; }
+        public virtual FredSeries? FredSeries { get; set; }
         public virtual int FredSeriesId { get; set; }
     }
 

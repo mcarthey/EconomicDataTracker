@@ -25,7 +25,7 @@ namespace EconomicDataTracker.Entities.Repositories
         }
 
         // Read
-        public async Task<FredObservationUpdateTracker> GetByIdAsync(int id)
+        public async Task<FredObservationUpdateTracker?> GetByIdAsync(int id)
         {
             return await _dbContext.FredObservationUpdateTrackers
                 .Include(ut => ut.FredSeries)
