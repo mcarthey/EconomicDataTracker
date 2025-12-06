@@ -29,7 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
            .UseLazyLoadingProxies());
 
 // Register repositories and Unit of Work
-builder.Services.AddScoped<IFredSeriesRepository, FredSeriesRepository>();
+builder.Services.AddScoped<FredSeriesRepository>();
 builder.Services.AddScoped<IFredObservationRepository, FredObservationRepository>();
 builder.Services.AddScoped<IFredObservationUpdateTrackerRepository, FredObservationUpdateTrackerRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
