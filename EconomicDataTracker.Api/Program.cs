@@ -30,9 +30,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register repositories and Unit of Work
 builder.Services.AddScoped<FredSeriesRepository>();
-builder.Services.AddScoped<IFredObservationRepository, FredObservationRepository>();
-builder.Services.AddScoped<IFredObservationUpdateTrackerRepository, FredObservationUpdateTrackerRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<FredObservationRepository>();
+builder.Services.AddScoped<FredObservationUpdateTrackerRepository>();
+builder.Services.AddScoped<UnitOfWork>();
 
 // Configure CORS for Angular frontend
 builder.Services.AddCors(options =>
