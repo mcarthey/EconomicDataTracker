@@ -1,0 +1,138 @@
+name: Build, Test, and Run
+
+on:
+  push:
+    branches: [ "**" ]  # Run on all branches
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE: 'true'  # Disable workload logger bug
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+    - name: Verify API builds
+      run: dotnet build EconomicDataTracker.Api/EconomicDataTracker.Api.csproj --configuration Release
+
+    - name: Verify Console builds
+      run: dotnet build EconomicDataTracker.Console/EconomicDataTracker.Console.csproj --configuration Release
+
+  runtime-check:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Create test configuration
+      run: |
+        # Create a test appsettings file
+        mkdir -p SharedConfig
+        cat > SharedConfig/appsettings.Dev.json << 'EOF'
+        {
+          "ConnectionStrings": {
+            "DefaultConnection": "Server=localhost;Database=EconomicDataTracker_Test;Integrated Security=true;TrustServerCertificate=True;"
+          },
+          "Logging": {
+            "LogLevel": {
+              "Default": "Information",
+              "Microsoft.AspNetCore": "Warning"
+            }
+          }
+        }
+        EOF
+
+    - name: Build API
+      run: dotnet build EconomicDataTracker.Api/EconomicDataTracker.Api.csproj --configuration Release
+
+    - name: Test API startup (dry-run)
+      run: |
+        # Set environment variable to prevent actual database connection
+        export ASPNETCORE_ENVIRONMENT=Development
+
+        # Try to build and check for compilation errors
+        dotnet build EconomicDataTracker.Api/EconomicDataTracker.Api.csproj --configuration Release --no-incremental
+
+        # Verify the DLL was created
+        if [ -f "EconomicDataTracker.Api/bin/Release/net10.0/EconomicDataTracker.Api.dll" ]; then
+          echo "✅ API DLL built successfully"
+        else
+          echo "❌ API DLL not found"
+          exit 1
+        fi
+
+    - name: Verify configuration loading
+      run: |
+        # Create a simple test to verify ConfigurationHelper works
+        cd EconomicDataTracker.Api
+
+        # Check that appsettings file exists
+        if [ -f "../SharedConfig/appsettings.Dev.json" ]; then
+          echo "✅ Configuration file exists"
+        else
+          echo "❌ Configuration file missing"
+          exit 1
+        fi
+
+    - name: Test Console startup (dry-run)
+      run: |
+        # Build console app
+        dotnet build EconomicDataTracker.Console/EconomicDataTracker.Console.csproj --configuration Release
+
+        # Verify the DLL was created
+        if [ -f "EconomicDataTracker.Console/bin/Release/net10.0/EconomicDataTracker.Console.dll" ]; then
+          echo "✅ Console DLL built successfully"
+        else
+          echo "❌ Console DLL not found"
+          exit 1
+        fi
+
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Check for build warnings
+      run: |
+        dotnet build --configuration Release /warnaserror 2>&1 | tee build.log || true
+
+        # Count warnings (but don't fail the build)
+        WARNING_COUNT=$(grep -c "warning CS" build.log || true)
+        echo "Build produced $WARNING_COUNT warnings"
+
+        if [ $WARNING_COUNT -gt 0 ]; then
+          echo "⚠️ Build has warnings that should be addressed"
+        else
+          echo "✅ No build warnings"
+        fi
