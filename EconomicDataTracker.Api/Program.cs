@@ -1,13 +1,8 @@
-using EconomicDataTracker.Common.Entities.Helpers;
 using EconomicDataTracker.Entities.Data;
 using EconomicDataTracker.Entities.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Load configuration
-var environment = builder.Environment.EnvironmentName;
-var config = ConfigurationHelper.GetConfiguration(environmentName: environment);
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -23,7 +18,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Configure database context
-var connectionString = config.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)
            .UseLazyLoadingProxies());
