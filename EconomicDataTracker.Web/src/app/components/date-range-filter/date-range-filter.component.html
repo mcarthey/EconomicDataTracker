@@ -1,0 +1,26 @@
+<div class="date-range-filter">
+  <label>Custom Date Range:</label>
+  <div class="date-inputs">
+    <div class="date-input-group">
+      <label for="startDate">From:</label>
+      <input
+        type="date"
+        id="startDate"
+        [(ngModel)]="startDateString"
+        (change)="onDateChange()"
+      />
+    </div>
+    <div class="date-input-group">
+      <label for="endDate">To:</label>
+      <input
+        type="date"
+        id="endDate"
+        [(ngModel)]="endDateString"
+        (change)="onDateChange()"
+      />
+    </div>
+    <button type="button" class="clear-btn" (click)="clearDates()" *ngIf="startDateString || endDateString">
+      Clear
+    </button>
+  </div>
+</div>

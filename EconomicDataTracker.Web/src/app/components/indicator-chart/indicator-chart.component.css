@@ -1,0 +1,40 @@
+.chart-wrapper {
+  width: 100%;
+}
+
+.chart-header {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.3em;
+}
+
+.series-name {
+  font-size: 0.9em;
+  color: #667eea;
+  font-weight: 600;
+  background: #667eea22;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.chart-canvas {
+  width: 100%;
+}
+
+.chart-footer {
+  margin-top: 10px;
+  text-align: right;
+  font-size: 0.85em;
+  color: #999;
+}
+
+.data-points {
+  font-style: italic;
+}

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EconomicDataTracker.Entities\EconomicDataTracker.Entities.csproj" />
+    <ProjectReference Include="..\EconomicDataTracker.Common.Config\EconomicDataTracker.Common.Config.csproj" />
+    <ProjectReference Include="..\EconomicDataTracker.Common.Entities\EconomicDataTracker.Common.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\SharedConfig\appsettings.Dev.json" Link="appsettings.Dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
