@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Load configuration
 var environment = builder.Environment.EnvironmentName;
-var configHelper = new ConfigurationHelper(environment);
-var config = configHelper.GetConfiguration();
+var config = ConfigurationHelper.GetConfiguration(environment);
 
 // Add services to the container
 builder.Services.AddControllers();
