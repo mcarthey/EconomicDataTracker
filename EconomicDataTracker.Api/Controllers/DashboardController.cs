@@ -1,5 +1,4 @@
 using EconomicDataTracker.Api.ViewModels;
-using EconomicDataTracker.Entities.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicDataTracker.Api.Controllers;
@@ -8,10 +7,10 @@ namespace EconomicDataTracker.Api.Controllers;
 [Route("api/[controller]")]
 public class DashboardController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly EconomicDataTracker.Entities.Repositories.UnitOfWork _unitOfWork;
     private readonly ILogger<DashboardController> _logger;
 
-    public DashboardController(IUnitOfWork unitOfWork, ILogger<DashboardController> logger)
+    public DashboardController(EconomicDataTracker.Entities.Repositories.UnitOfWork unitOfWork, ILogger<DashboardController> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
