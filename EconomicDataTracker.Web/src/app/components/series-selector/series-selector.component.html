@@ -1,0 +1,32 @@
+<div class="series-selector">
+  <label>Select Indicators:</label>
+  <div class="selector-container">
+    <div class="selector-button" (click)="toggleDropdown()">
+      <span class="selected-text">{{ getSelectedSeriesNames() }}</span>
+      <span class="arrow">▼</span>
+    </div>
+
+    <div class="dropdown" *ngIf="showDropdown">
+      <div class="dropdown-header">
+        <button type="button" class="action-btn" (click)="selectAll()">Select All</button>
+        <button type="button" class="action-btn" (click)="clearAll()">Clear All</button>
+      </div>
+
+      <div class="dropdown-list">
+        <div class="series-option" *ngFor="let series of allSeries">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [checked]="isSelected(series.id)"
+              (change)="toggleSeries(series.id)"
+            />
+            <span class="series-info">
+              <span class="series-name">{{ series.name }}</span>
+              <span class="series-description">{{ series.description }}</span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
