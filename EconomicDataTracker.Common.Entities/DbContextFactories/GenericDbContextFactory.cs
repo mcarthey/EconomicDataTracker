@@ -13,14 +13,16 @@ namespace EconomicDataTracker.Common.Entities.DbContextFactories
             var configuration = ConfigurationHelper.GetConfiguration();
 
             // Get connection string
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             // Configure DbContext options
             var optionsBuilder = new DbContextOptionsBuilder<TContext>();
             ConfigurationHelper.ConfigureDbContextOptions(optionsBuilder, connectionString);
 
             // Create and return the DbContext instance
-            return (TContext)Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
+            return (TContext?)Activator.CreateInstance(typeof(TContext), optionsBuilder.Options)
+                ?? throw new InvalidOperationException($"Could not create instance of {typeof(TContext).Name}");
         }
     }
 }

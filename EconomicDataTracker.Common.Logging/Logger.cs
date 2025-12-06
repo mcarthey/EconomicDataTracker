@@ -19,7 +19,7 @@
             LogToDatabase("Warning", message);
         }
 
-        public void LogError(string message, Exception exception = null)
+        public void LogError(string message, Exception? exception = null)
         {
             var fullMessage = $"{message}{(exception != null ? " - Exception: " + exception.Message : "")}";
             LogToDatabase("Error", fullMessage);

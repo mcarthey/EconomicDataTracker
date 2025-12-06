@@ -14,7 +14,12 @@ public static class MigrationHelper
             : $"{migrationClassName}.rollback.sql";
 
         // Get the directory of the executing assembly
-        string assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string? assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        if (string.IsNullOrEmpty(assemblyLocation))
+        {
+            throw new InvalidOperationException("Could not determine assembly location");
+        }
 
         // Dynamically retrieve the context name based on the DbContext type
         string contextName = GetContextName();
