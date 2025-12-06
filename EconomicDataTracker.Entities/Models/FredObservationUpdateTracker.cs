@@ -8,7 +8,7 @@ namespace EconomicDataTracker.Entities.Models
         public DateTime LastUpdatedDate { get; set; }
 
         // navigation property
-        public virtual FredSeries FredSeries { get; set; }
+        public virtual FredSeries? FredSeries { get; set; }
         public virtual int FredSeriesId { get; set; }
     }
 

@@ -12,7 +12,7 @@ namespace EconomicDataTracker.Common.Config.Repositories
             _dbContext = dbContext;
         }
 
-        public string GetConfiguration(string key)
+        public string? GetConfiguration(string key)
         {
             var entry = _dbContext.ConfigurationEntries.SingleOrDefault(e => e.Key == key);
             return entry?.Value;
