@@ -8,10 +8,10 @@ namespace EconomicDataTracker.Api.Controllers;
 [Route("api/[controller]")]
 public class ObservationsController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly UnitOfWork _unitOfWork;
     private readonly ILogger<ObservationsController> _logger;
 
-    public ObservationsController(IUnitOfWork unitOfWork, ILogger<ObservationsController> logger)
+    public ObservationsController(UnitOfWork unitOfWork, ILogger<ObservationsController> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;

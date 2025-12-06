@@ -9,10 +9,10 @@ namespace EconomicDataTracker.Api.Controllers;
 [Route("api/[controller]")]
 public class SeriesController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly UnitOfWork _unitOfWork;
     private readonly ILogger<SeriesController> _logger;
 
-    public SeriesController(IUnitOfWork unitOfWork, ILogger<SeriesController> logger)
+    public SeriesController(UnitOfWork unitOfWork, ILogger<SeriesController> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;

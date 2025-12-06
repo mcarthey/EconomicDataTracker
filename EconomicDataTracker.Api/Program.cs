@@ -7,15 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Load configuration
 var environment = builder.Environment.EnvironmentName;
-var configHelper = new ConfigurationHelper(environment);
-var config = configHelper.GetConfiguration();
+var config = ConfigurationHelper.GetConfiguration(environment);
 
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
     {
         Title = "Economic Data Tracker API",
         Version = "v1",
@@ -30,10 +29,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
            .UseLazyLoadingProxies());
 
 // Register repositories and Unit of Work
-builder.Services.AddScoped<IFredSeriesRepository, FredSeriesRepository>();
-builder.Services.AddScoped<IFredObservationRepository, FredObservationRepository>();
-builder.Services.AddScoped<IFredObservationUpdateTrackerRepository, FredObservationUpdateTrackerRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<FredSeriesRepository>();
+builder.Services.AddScoped<FredObservationRepository>();
+builder.Services.AddScoped<FredObservationUpdateTrackerRepository>();
+builder.Services.AddScoped<UnitOfWork>();
 
 // Configure CORS for Angular frontend
 builder.Services.AddCors(options =>
