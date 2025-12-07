@@ -1,0 +1,57 @@
+.chart-insight-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-insight-container h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.insight-item {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #4b5563;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #d1d5db;
+}
+
+.insight-item:last-child {
+  margin-bottom: 0;
+}
+
+.insight-item strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.positive-indicator {
+  color: #059669;
+  font-weight: 600;
+}
+
+.negative-indicator {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.warning-text {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.positive-text {
+  color: #059669;
+  font-weight: 600;
+}

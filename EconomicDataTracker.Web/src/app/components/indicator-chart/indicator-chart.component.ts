@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { SeriesWithObservations } from '../../models/series-with-observations.model';
+import { getIndicatorMetadata, IndicatorMetadata } from '../../models/indicator-metadata';
 
 @Component({
   selector: 'app-indicator-chart',
@@ -22,41 +23,7 @@ export class IndicatorChartComponent implements OnChanges {
     labels: []
   };
 
-  public lineChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    elements: {
-      line: {
-        tension: 0.4
-      }
-    },
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: 'Date'
-        }
-      },
-      y: {
-        display: true,
-        title: {
-          display: true,
-          text: 'Value'
-        }
-      }
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top'
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false
-      }
-    }
-  };
+  public lineChartOptions: ChartConfiguration['options'] = {};
 
   public lineChartType: ChartType = 'line';
 
@@ -87,22 +54,140 @@ export class IndicatorChartComponent implements OnChanges {
 
     const data = sortedObservations.map(obs => obs.value);
 
+    // Get metadata for this indicator
+    const metadata = getIndicatorMetadata(this.seriesData.series.name);
+
     // Generate a color based on series ID
     const color = this.getColorForSeries(this.seriesData.series.id);
 
+    // Build datasets - start with the main line
+    const datasets: any[] = [
+      {
+        data: data,
+        label: this.seriesData.series.description,
+        borderColor: color,
+        backgroundColor: color + '33',
+        fill: true,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        order: 1
+      }
+    ];
+
+    // Add target range lines if metadata is available
+    if (metadata?.interpretation.targetRange) {
+      const { min, max } = metadata.interpretation.targetRange;
+
+      // Add target range background (as a dataset)
+      datasets.push({
+        label: 'Target Range',
+        data: labels.map(() => max),
+        borderColor: '#10b98133',
+        backgroundColor: '#10b98111',
+        fill: '+1',
+        pointRadius: 0,
+        borderWidth: 1,
+        borderDash: [5, 5],
+        order: 3
+      });
+
+      datasets.push({
+        label: '',
+        data: labels.map(() => min),
+        borderColor: '#10b98133',
+        backgroundColor: 'transparent',
+        pointRadius: 0,
+        borderWidth: 1,
+        borderDash: [5, 5],
+        order: 3
+      });
+    }
+
+    // Add benchmark lines if available
+    if (metadata?.benchmarks) {
+      if (metadata.benchmarks.preCovidAvg) {
+        datasets.push({
+          label: 'Pre-COVID Avg',
+          data: labels.map(() => metadata.benchmarks.preCovidAvg),
+          borderColor: '#6b7280',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false,
+          order: 2
+        });
+      }
+    }
+
     this.lineChartData = {
       labels: labels,
-      datasets: [
-        {
-          data: data,
-          label: this.seriesData.series.description,
-          borderColor: color,
-          backgroundColor: color + '33', // Add transparency
-          fill: true,
-          pointRadius: 2,
-          pointHoverRadius: 5
+      datasets: datasets
+    };
+
+    // Build chart options dynamically
+    this.lineChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      elements: {
+        line: {
+          tension: 0.4
         }
-      ]
+      },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Date'
+          }
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: metadata?.context.whatItMeans || 'Value'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            filter: (item) => item.text !== '' // Hide empty labels
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            title: (context) => {
+              return context[0].label;
+            },
+            label: (context) => {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed.y !== null) {
+                if (metadata?.formatting) {
+                  let formatted = context.parsed.y.toFixed(metadata.formatting.decimals);
+                  if (metadata.formatting.isCurrency) {
+                    formatted = '$' + formatted;
+                  }
+                  if (metadata.formatting.suffix) {
+                    formatted += metadata.formatting.suffix;
+                  }
+                  label += formatted;
+                } else {
+                  label += context.parsed.y.toFixed(2);
+                }
+              }
+              return label;
+            }
+          }
+        }
+      }
     };
 
     // Update the chart if it exists
