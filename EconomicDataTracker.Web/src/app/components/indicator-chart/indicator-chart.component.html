@@ -1,7 +1,7 @@
 <div class="chart-wrapper">
   <div class="chart-header">
-    <h3>{{ seriesData?.series.description || 'Loading...' }}</h3>
-    <span class="series-name">{{ seriesData?.series.name }}</span>
+    <h3>{{ seriesData?.series?.description || 'Loading...' }}</h3>
+    <span class="series-name">{{ seriesData?.series?.name }}</span>
   </div>
   <div class="chart-canvas" [ngStyle]="chartContainerStyle">
     <canvas baseChart

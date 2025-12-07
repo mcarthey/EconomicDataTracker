@@ -195,7 +195,7 @@ export class IndicatorInterpretationService {
       return 0;
     });
 
-    return sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
+    return sentimentScores.reduce<number>((a, b) => a + b, 0) / sentimentScores.length;
   }
 
   private calculateCategoryTrend(indicators: EnrichedIndicator[]): 'improving' | 'stable' | 'declining' {
