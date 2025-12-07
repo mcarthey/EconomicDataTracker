@@ -23,10 +23,10 @@ namespace EconomicDataTracker.Console.Requesters
             return url;
         }
 
-        protected override string? GetAuthenticationType()
+        protected override string GetAuthenticationType()
         {
             // No authentication headers needed
-            return null;
+            return string.Empty;
         }
 
         public async Task<string> FetchDataAsync(string seriesName, DateTime lastUpdatedDate)

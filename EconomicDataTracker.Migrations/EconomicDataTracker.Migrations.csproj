@@ -50,13 +50,13 @@
     </None>
   </ItemGroup>
 
-	<PropertyGroup>
-		<PostBuildEvent>
-			xcopy /Y /I /F "$(SolutionDir)SharedConfig\appsettings.Dev.json" "$(ProjectDir)Configs\"
-		</PostBuildEvent>
-	</PropertyGroup>
+	<Target Name="CopyConfigFile" AfterTargets="Build">
+		<Copy SourceFiles="..\SharedConfig\appsettings.Dev.json"
+		      DestinationFolder="$(ProjectDir)Configs"
+		      SkipUnchangedFiles="true" />
+	</Target>
 
-	<Target Name="PrintProperties" AfterTargets="PostBuildEvent">
+	<Target Name="PrintProperties" AfterTargets="Build">
 		<Message Text="SolutionDir: $(SolutionDir)" Importance="high" />
 		<Message Text="ProjectDir: $(ProjectDir)" Importance="high" />
 		<Message Text="SolutionName: $(SolutionName)" Importance="high" />

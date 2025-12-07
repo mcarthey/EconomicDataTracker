@@ -41,7 +41,7 @@ public static class MigrationHelper
     {
         // Traverse the stack trace to find the actual migration subclass (not BaseMigration)
         var migrationClass = new StackTrace().GetFrames()
-            .Select(frame => frame.GetMethod().DeclaringType)
+            .Select(frame => frame.GetMethod()?.DeclaringType)
             .FirstOrDefault(type => type != null && type.IsSubclassOf(typeof(BaseMigration)) && type != typeof(BaseMigration));
 
         if (migrationClass == null)
