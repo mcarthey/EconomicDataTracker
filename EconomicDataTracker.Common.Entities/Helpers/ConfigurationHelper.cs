@@ -23,12 +23,27 @@ namespace EconomicDataTracker.Common.Entities.Helpers
 
         public static void ConfigureDbContextOptions(DbContextOptionsBuilder optionsBuilder, string connectionString)
         {
-            optionsBuilder.UseSqlServer(connectionString, options =>
-                {
-                    // Specify the migrations assembly to centralize migrations in EconomicDataTracker.Migrations
-                    options.MigrationsAssembly("EconomicDataTracker.Migrations");
-                })
-                .UseLazyLoadingProxies();
+            // Detect if using SQLite based on connection string pattern
+            if (connectionString.Contains("Data Source=") && !connectionString.Contains("Server="))
+            {
+                // Configure for SQLite
+                optionsBuilder.UseSqlite(connectionString, options =>
+                    {
+                        // Specify the migrations assembly to centralize migrations in EconomicDataTracker.Migrations
+                        options.MigrationsAssembly("EconomicDataTracker.Migrations");
+                    })
+                    .UseLazyLoadingProxies();
+            }
+            else
+            {
+                // Configure for SQL Server
+                optionsBuilder.UseSqlServer(connectionString, options =>
+                    {
+                        // Specify the migrations assembly to centralize migrations in EconomicDataTracker.Migrations
+                        options.MigrationsAssembly("EconomicDataTracker.Migrations");
+                    })
+                    .UseLazyLoadingProxies();
+            }
         }
     }
 }
