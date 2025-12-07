@@ -27,7 +27,7 @@ export class IndicatorInterpretationService {
       return this.createDefaultEnrichedIndicator(summary);
     }
 
-    const trend = this.calculateTrend(summary.changeValue || 0);
+    const trend = this.calculateTrend(summary.changePercent || 0);
     const sentiment = this.calculateSentiment(
       trend,
       metadata.interpretation.goodDirection
@@ -127,9 +127,10 @@ export class IndicatorInterpretationService {
     };
   }
 
-  private calculateTrend(changeValue: number): 'up' | 'down' | 'stable' {
-    if (Math.abs(changeValue) < 0.01) return 'stable';
-    return changeValue > 0 ? 'up' : 'down';
+  private calculateTrend(changePercent: number): 'up' | 'down' | 'stable' {
+    // Use same threshold as assessment (0.5%) for consistency
+    if (Math.abs(changePercent) < 0.5) return 'stable';
+    return changePercent > 0 ? 'up' : 'down';
   }
 
   private calculateSentiment(
@@ -362,7 +363,7 @@ export class IndicatorInterpretationService {
   }
 
   private createDefaultEnrichedIndicator(summary: DashboardSummary): EnrichedIndicator {
-    const trend = this.calculateTrend(summary.changeValue || 0);
+    const trend = this.calculateTrend(summary.changePercent || 0);
 
     return {
       ...summary,
