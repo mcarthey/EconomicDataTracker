@@ -1,0 +1,9 @@
+<div class="chart-insight-container">
+  <h4>📊 Chart Analysis</h4>
+
+  <div class="insight-item" [innerHTML]="trendAnalysis"></div>
+
+  <div class="insight-item" *ngIf="volatilityInsight" [innerHTML]="volatilityInsight"></div>
+
+  <div class="insight-item" *ngIf="currentPosition" [innerHTML]="currentPosition"></div>
+</div>

@@ -43,6 +43,9 @@ export class IndicatorInterpretationService {
       whatItMeans: metadata.context.whatItMeans,
       whyItMatters: metadata.context.whyItMatters,
       currentAssessment: this.generateAssessment(summary, metadata),
+      whatDrivesThis: metadata.context.whatDrivesThis,
+      implications: this.generateImplications(trend, metadata),
+      benchmarkComparison: this.generateBenchmarkComparison(summary, metadata),
       formattedValue: this.formatValue(summary.latestValue || 0, metadata),
       formattedChange: this.formatChange(summary.changePercent || 0)
     };
@@ -163,6 +166,51 @@ export class IndicatorInterpretationService {
     } else {
       return `${isGood ? 'Strong improvement' : 'Sharp decline'} - ${direction} rapidly`;
     }
+  }
+
+  private generateImplications(trend: 'up' | 'down' | 'stable', metadata: IndicatorMetadata): string {
+    if (trend === 'stable') {
+      return 'Maintaining current levels suggests stability in this economic area';
+    }
+
+    return trend === 'up'
+      ? metadata.context.implications.rising
+      : metadata.context.implications.falling;
+  }
+
+  private generateBenchmarkComparison(summary: DashboardSummary, metadata: IndicatorMetadata): string | undefined {
+    const currentValue = summary.latestValue;
+    if (!currentValue || !metadata.benchmarks) return undefined;
+
+    const { preCovidAvg, historicalAvg, recession, expansion } = metadata.benchmarks;
+    const comparisons: string[] = [];
+
+    // Compare to pre-COVID baseline
+    if (preCovidAvg !== undefined) {
+      const diff = currentValue - preCovidAvg;
+      const percentDiff = ((diff / preCovidAvg) * 100).toFixed(1);
+      const direction = diff > 0 ? 'above' : 'below';
+      comparisons.push(`${Math.abs(Number(percentDiff))}% ${direction} pre-COVID avg (${this.formatValue(preCovidAvg, metadata)})`);
+    }
+
+    // Compare to historical average
+    if (historicalAvg !== undefined) {
+      const diff = currentValue - historicalAvg;
+      const percentDiff = ((diff / historicalAvg) * 100).toFixed(1);
+      const direction = diff > 0 ? 'above' : 'below';
+      comparisons.push(`${Math.abs(Number(percentDiff))}% ${direction} long-term avg (${this.formatValue(historicalAvg, metadata)})`);
+    }
+
+    // Indicate recession/expansion context
+    if (recession !== undefined && expansion !== undefined) {
+      if (currentValue <= recession) {
+        comparisons.push('⚠️ Near recession levels');
+      } else if (currentValue >= expansion) {
+        comparisons.push('✓ At expansion levels');
+      }
+    }
+
+    return comparisons.length > 0 ? comparisons.join(' • ') : undefined;
   }
 
   private formatValue(value: number, metadata: IndicatorMetadata): string {
@@ -325,6 +373,9 @@ export class IndicatorInterpretationService {
       whatItMeans: '',
       whyItMatters: '',
       currentAssessment: 'No assessment available',
+      whatDrivesThis: '',
+      implications: '',
+      benchmarkComparison: undefined,
       formattedValue: (summary.latestValue || 0).toFixed(2),
       formattedChange: this.formatChange(summary.changePercent || 0)
     };

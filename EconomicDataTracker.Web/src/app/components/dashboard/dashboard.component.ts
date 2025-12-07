@@ -15,6 +15,7 @@ import { IndicatorChartComponent } from '../indicator-chart/indicator-chart.comp
 import { SeriesSelectorComponent } from '../series-selector/series-selector.component';
 import { DateRangeFilterComponent } from '../date-range-filter/date-range-filter.component';
 import { KeyInsightsComponent } from '../key-insights/key-insights.component';
+import { ChartInsightComponent } from '../chart-insight/chart-insight.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +26,8 @@ import { KeyInsightsComponent } from '../key-insights/key-insights.component';
     IndicatorChartComponent,
     SeriesSelectorComponent,
     DateRangeFilterComponent,
-    KeyInsightsComponent
+    KeyInsightsComponent,
+    ChartInsightComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
