@@ -80,35 +80,43 @@ EconomicDataTracker/
 ### Technology Stack
 
 **Backend:**
-- .NET 8.0
+- .NET 10.0
 - ASP.NET Core Web API
-- Entity Framework Core
-- SQL Server
+- Entity Framework Core 10.0
+- SQL Server / SQLite (local development)
 - Swagger/OpenAPI
 
 **Frontend:**
-- Angular 17
-- TypeScript
+- Angular 17 (Standalone Components)
+- TypeScript (strict mode)
 - Chart.js / ng2-charts
 - RxJS
-- Modern CSS (responsive design)
+- Responsive CSS
 
 **Data Source:**
 - Federal Reserve Economic Data (FRED) API
+
+**DevOps:**
+- GitHub Actions CI/CD
+- Cross-platform support (Windows, Linux, macOS)
 
 ## Getting Started
 
 ### Prerequisites
 
 **Backend:**
-- **.NET SDK**: [.NET 8.0 or later](https://dotnet.microsoft.com/download/dotnet)
-- **SQL Server**: SQL Server 2019 or later (or SQL Server Express)
-- **FRED API Key**: Sign up at [FRED](https://fred.stlouisfed.org/docs/api/api_key.html) to obtain an API key
+- **.NET SDK**: [.NET 10.0 or later](https://dotnet.microsoft.com/download/dotnet)
+- **Database**:
+  - SQL Server 2019+ (production) OR
+  - SQLite (local development - no installation required)
+- **FRED API Key**: Free API key from [FRED](https://fred.stlouisfed.org/docs/api/api_key.html)
 
 **Frontend:**
 - **Node.js**: v18 or later
 - **npm**: v9 or later
 - **Angular CLI**: v17 or later
+
+> **Quick Start Tip**: For the fastest setup, see [QUICKSTART.md](QUICKSTART.md) which uses SQLite for zero-configuration local development.
 
 ### Installation
 
