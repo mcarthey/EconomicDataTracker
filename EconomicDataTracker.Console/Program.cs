@@ -14,7 +14,11 @@ namespace EconomicDataTracker.Console
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             var mainService = serviceProvider.GetService<MainService>();
-            await mainService?.RunAsync();
+            if (mainService == null)
+            {
+                throw new InvalidOperationException("MainService could not be resolved from the service provider.");
+            }
+            await mainService.RunAsync();
         }
     }
 }

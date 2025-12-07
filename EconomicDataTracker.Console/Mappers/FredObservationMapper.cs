@@ -9,6 +9,11 @@ namespace EconomicDataTracker.Console.Mappers
         public IEnumerable<FredObservation> MapFromJson(string jsonData)
         {
             var fredData = JsonSerializer.Deserialize<FredApiResponse>(jsonData);
+            if (fredData?.Observations == null)
+            {
+                return Enumerable.Empty<FredObservation>();
+            }
+
             var observations = new List<FredObservation>();
 
             foreach (var observation in fredData.Observations)

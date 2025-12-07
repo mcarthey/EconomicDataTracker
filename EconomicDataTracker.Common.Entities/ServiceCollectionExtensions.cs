@@ -41,7 +41,8 @@ namespace EconomicDataTracker.Common.Entities
             where TContext : DbContext
         {
             var configuration = ConfigurationHelper.GetConfiguration();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             services.AddDbContext<TContext>(options =>
             {
                 ConfigurationHelper.ConfigureDbContextOptions(options, connectionString);
