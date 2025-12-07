@@ -23,7 +23,7 @@ namespace EconomicDataTracker.Console.Requesters
             return url;
         }
 
-        protected override string GetAuthenticationType()
+        protected override string? GetAuthenticationType()
         {
             // No authentication headers needed
             return null;

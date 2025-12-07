@@ -51,7 +51,7 @@ namespace EconomicDataTracker.Console.Services
                         _unitOfWork.FredObservationRepository.AddObservationRecord(observation.Date, observation.Value, seriesId);
                     }
 
-                    _unitOfWork.FredObservationUpdateTrackerRepository.AddOrUpdateAsync(seriesId, DateTime.Now);
+                    await _unitOfWork.FredObservationUpdateTrackerRepository.AddOrUpdateAsync(seriesId, DateTime.Now);
                     await _unitOfWork.SaveChangesAsync();
 
                     _logger.LogInformation($"Data successfully saved to the database for series {seriesName}.");
