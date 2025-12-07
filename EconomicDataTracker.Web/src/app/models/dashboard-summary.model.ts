@@ -22,6 +22,11 @@ export interface EnrichedIndicator extends DashboardSummary {
   whyItMatters: string;
   currentAssessment: string;
 
+  // New enhanced context fields
+  whatDrivesThis: string; // Factors that influence this indicator
+  implications: string; // What the current trend means for the economy
+  benchmarkComparison?: string; // How it compares to historical benchmarks
+
   // Formatting
   formattedValue: string;
   formattedChange: string;

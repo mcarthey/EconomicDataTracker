@@ -55,11 +55,29 @@
           </div>
 
           <div class="indicator-assessment">
-            <p>{{ indicator.currentAssessment }}</p>
+            <p class="assessment-status">{{ indicator.currentAssessment }}</p>
+          </div>
+
+          <!-- Enhanced Context Sections -->
+          <div class="indicator-context">
+            <div class="context-section">
+              <h5>💡 What This Means</h5>
+              <p class="context-text">{{ indicator.implications }}</p>
+            </div>
+
+            <div class="context-section">
+              <h5>⚙️ What Drives This</h5>
+              <p class="context-text">{{ indicator.whatDrivesThis }}</p>
+            </div>
+
+            <div class="context-section" *ngIf="indicator.benchmarkComparison">
+              <h5>📊 Historical Context</h5>
+              <p class="context-text benchmark">{{ indicator.benchmarkComparison }}</p>
+            </div>
           </div>
 
           <div class="indicator-footer">
-            <span class="last-updated">{{ formatDate(indicator.latestDate) }}</span>
+            <span class="last-updated">Updated {{ formatDate(indicator.latestDate) }}</span>
           </div>
         </div>
       </div>
