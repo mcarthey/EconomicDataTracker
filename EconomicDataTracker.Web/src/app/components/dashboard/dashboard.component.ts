@@ -2,12 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EconomicDataService } from '../../services/economic-data.service';
-import { DashboardSummary } from '../../models/dashboard-summary.model';
+import { IndicatorInterpretationService } from '../../services/indicator-interpretation.service';
+import {
+  DashboardSummary,
+  EnrichedIndicator,
+  CategoryGroup,
+  EconomicHealthSummary
+} from '../../models/dashboard-summary.model';
 import { Series } from '../../models/series.model';
 import { SeriesWithObservations } from '../../models/series-with-observations.model';
 import { IndicatorChartComponent } from '../indicator-chart/indicator-chart.component';
 import { SeriesSelectorComponent } from '../series-selector/series-selector.component';
 import { DateRangeFilterComponent } from '../date-range-filter/date-range-filter.component';
+import { KeyInsightsComponent } from '../key-insights/key-insights.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,13 +24,17 @@ import { DateRangeFilterComponent } from '../date-range-filter/date-range-filter
     FormsModule,
     IndicatorChartComponent,
     SeriesSelectorComponent,
-    DateRangeFilterComponent
+    DateRangeFilterComponent,
+    KeyInsightsComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   summaries: DashboardSummary[] = [];
+  enrichedIndicators: EnrichedIndicator[] = [];
+  categoryGroups: CategoryGroup[] = [];
+  healthSummary: EconomicHealthSummary | null = null;
   allSeries: Series[] = [];
   selectedSeriesIds: number[] = [];
   trendData: SeriesWithObservations[] = [];
@@ -43,7 +54,10 @@ export class DashboardComponent implements OnInit {
     { value: '10years', label: '10 Years' }
   ];
 
-  constructor(private economicDataService: EconomicDataService) { }
+  constructor(
+    private economicDataService: EconomicDataService,
+    private interpretationService: IndicatorInterpretationService
+  ) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -68,10 +82,21 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Load dashboard summary
+    // Load dashboard summary and enrich with interpretation
     this.economicDataService.getDashboardSummary(true).subscribe({
       next: (summaries) => {
         this.summaries = summaries;
+
+        // Enrich indicators with interpretation and context
+        this.enrichedIndicators = summaries.map(summary =>
+          this.interpretationService.enrichIndicator(summary)
+        );
+
+        // Group by category
+        this.categoryGroups = this.interpretationService.groupByCategory(this.enrichedIndicators);
+
+        // Generate economic health summary
+        this.healthSummary = this.interpretationService.generateEconomicHealth(this.enrichedIndicators);
       },
       error: (err) => {
         this.error = 'Failed to load dashboard summary';
@@ -136,5 +161,20 @@ export class DashboardComponent implements OnInit {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  // New helper methods for enriched indicators
+  getSentimentClass(indicator: EnrichedIndicator): string {
+    return `sentiment-${indicator.sentiment}`;
+  }
+
+  getTrendIcon(trend: 'up' | 'down' | 'stable'): string {
+    if (trend === 'up') return '↗';
+    if (trend === 'down') return '↘';
+    return '→';
+  }
+
+  getTrendClass(indicator: EnrichedIndicator): string {
+    return `trend-${indicator.trend}`;
   }
 }

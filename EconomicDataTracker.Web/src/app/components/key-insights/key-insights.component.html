@@ -1,0 +1,38 @@
+<div class="key-insights-container">
+  <div class="economic-health-card">
+    <h2>📊 Economic Health Assessment</h2>
+    <div class="health-score">
+      <div class="score-circle" [ngClass]="getHealthScoreClass(healthSummary.overallScore)">
+        <span class="score-icon">{{ getHealthIcon(healthSummary.overallScore) }}</span>
+        <span class="score-value">{{ healthSummary.overallScore }}</span>
+        <span class="score-label">{{ healthSummary.scoreLabel }}</span>
+      </div>
+      <div class="score-breakdown">
+        <div *ngFor="let catScore of healthSummary.categoryScores" class="category-score">
+          <span class="category-name">{{ catScore.category }}</span>
+          <div class="score-bar">
+            <div class="score-fill" [style.width.%]="catScore.score"></div>
+          </div>
+          <span class="trend-arrow" [ngClass]="'trend-' + catScore.trend">
+            {{ catScore.trend === 'up' ? '↗' : catScore.trend === 'down' ? '↘' : '→' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insights-grid">
+    <h3>🔑 Key Insights</h3>
+    <div class="insights-list">
+      <div *ngFor="let insight of healthSummary.keyInsights"
+           class="insight-card"
+           [ngClass]="getInsightClass(insight.type)">
+        <div class="insight-icon">{{ insight.icon }}</div>
+        <div class="insight-content">
+          <h4>{{ insight.title }}</h4>
+          <p>{{ insight.message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
