@@ -27,6 +27,8 @@ export class IndicatorChartComponent implements OnChanges {
 
   public lineChartType: ChartType = 'line';
 
+  public chartSentiment: 'positive' | 'negative' | 'neutral' | null = null;
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['seriesData'] && this.seriesData) {
       this.updateChartData();
@@ -190,8 +192,40 @@ export class IndicatorChartComponent implements OnChanges {
       }
     };
 
+    // Calculate chart sentiment based on recent trend
+    this.calculateChartSentiment(data, metadata);
+
     // Update the chart if it exists
     this.chart?.update();
+  }
+
+  private calculateChartSentiment(data: number[], metadata: IndicatorMetadata | undefined): void {
+    if (data.length < 2 || !metadata) {
+      this.chartSentiment = null;
+      return;
+    }
+
+    // Calculate trend from latest vs previous value
+    const latest = data[data.length - 1];
+    const previous = data[data.length - 2];
+    const changePercent = ((latest - previous) / previous) * 100;
+
+    // Determine trend
+    let trend: 'up' | 'down' | 'stable';
+    if (Math.abs(changePercent) < 0.5) {
+      trend = 'stable';
+    } else {
+      trend = changePercent > 0 ? 'up' : 'down';
+    }
+
+    // Calculate sentiment based on good direction
+    if (trend === 'stable') {
+      this.chartSentiment = 'neutral';
+    } else if (trend === metadata.interpretation.goodDirection) {
+      this.chartSentiment = 'positive';
+    } else {
+      this.chartSentiment = 'negative';
+    }
   }
 
   private getColorForSeries(seriesId: number): string {
@@ -216,5 +250,41 @@ export class IndicatorChartComponent implements OnChanges {
       'height.px': this.height,
       'position': 'relative'
     };
+  }
+
+  getChartWrapperClass(): string {
+    if (!this.chartSentiment) return '';
+    return `chart-sentiment-${this.chartSentiment}`;
+  }
+
+  getSentimentClass(): string {
+    if (!this.chartSentiment) return '';
+    return `sentiment-${this.chartSentiment}`;
+  }
+
+  getSentimentIcon(): string {
+    switch (this.chartSentiment) {
+      case 'positive':
+        return '✅';
+      case 'negative':
+        return '⚠️';
+      case 'neutral':
+        return '➡️';
+      default:
+        return '';
+    }
+  }
+
+  getSentimentLabel(): string {
+    switch (this.chartSentiment) {
+      case 'positive':
+        return 'Positive Trend';
+      case 'negative':
+        return 'Concerning Trend';
+      case 'neutral':
+        return 'Stable';
+      default:
+        return '';
+    }
   }
 }
