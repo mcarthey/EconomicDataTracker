@@ -13,23 +13,53 @@
     <p>Loading data...</p>
   </div>
 
-  <!-- Summary Cards -->
-  <section class="summary-section" *ngIf="!loading">
+  <!-- Key Insights Section -->
+  <section *ngIf="!loading && healthSummary">
+    <app-key-insights [healthSummary]="healthSummary"></app-key-insights>
+  </section>
+
+  <!-- Indicators by Category -->
+  <section class="indicators-section" *ngIf="!loading && categoryGroups.length > 0">
     <h2>Latest Indicators</h2>
-    <div class="summary-grid">
-      <div class="summary-card" *ngFor="let summary of summaries">
-        <div class="card-header">
-          <h3>{{ summary.name }}</h3>
-          <p class="description">{{ summary.description }}</p>
+
+    <div class="category-container" *ngFor="let category of categoryGroups">
+      <div class="category-header" [style.border-left-color]="category.color">
+        <div class="category-title">
+          <span class="category-icon">{{ category.icon }}</span>
+          <h3>{{ category.categoryName }}</h3>
+          <span class="health-badge" [ngClass]="'health-score-' + (category.healthScore >= 65 ? 'good' : category.healthScore >= 50 ? 'fair' : 'poor')">
+            {{ category.healthScore }}/100
+          </span>
         </div>
-        <div class="card-body">
-          <div class="latest-value">
-            <span class="value">{{ formatNumber(summary.latestValue) }}</span>
-            <span class="date">{{ formatDate(summary.latestDate) }}</span>
+      </div>
+
+      <div class="indicator-grid">
+        <div class="indicator-card"
+             *ngFor="let indicator of category.indicators"
+             [ngClass]="getSentimentClass(indicator)">
+          <div class="indicator-header">
+            <div class="indicator-name">
+              <h4>{{ indicator.name }}</h4>
+              <span class="indicator-desc">{{ indicator.description }}</span>
+            </div>
+            <div class="trend-indicator" [ngClass]="getTrendClass(indicator)">
+              <span class="trend-icon">{{ getTrendIcon(indicator.trend) }}</span>
+            </div>
           </div>
-          <div class="change" [ngClass]="getChangeClass(summary.changePercent)">
-            <span class="change-value">{{ formatNumber(summary.changeValue) }}</span>
-            <span class="change-percent">{{ formatPercent(summary.changePercent) }}</span>
+
+          <div class="indicator-value">
+            <span class="current-value">{{ indicator.formattedValue }}</span>
+            <span class="change-value" [ngClass]="getSentimentClass(indicator)">
+              {{ indicator.formattedChange }}
+            </span>
+          </div>
+
+          <div class="indicator-assessment">
+            <p>{{ indicator.currentAssessment }}</p>
+          </div>
+
+          <div class="indicator-footer">
+            <span class="last-updated">{{ formatDate(indicator.latestDate) }}</span>
           </div>
         </div>
       </div>
