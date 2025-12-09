@@ -470,6 +470,136 @@
   color: #9ca3af;
 }
 
+/* Section Header with Controls */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.control-btn.primary {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.control-btn.primary:hover {
+  background: #5568d3;
+}
+
+/* Category Header Collapse */
+.category-header {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.category-header:hover {
+  background: #fafafa;
+}
+
+.category-header.collapsed {
+  opacity: 0.7;
+}
+
+.collapse-icon {
+  font-size: 14px;
+  margin-right: 8px;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.indicator-count {
+  font-size: 0.85em;
+  color: #9ca3af;
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+/* Details Toggle Button */
+.details-toggle-btn {
+  width: 100%;
+  padding: 8px;
+  margin-top: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  color: #667eea;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.details-toggle-btn:hover {
+  background: #f3f4f6;
+  border-color: #667eea;
+}
+
+/* Charts Loading State */
+.charts-loading {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-small {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.categories-wrapper {
+  animation: fadeIn 0.3s ease;
+}
+
 @media (max-width: 768px) {
   .dashboard-header h1 {
     font-size: 1.8em;

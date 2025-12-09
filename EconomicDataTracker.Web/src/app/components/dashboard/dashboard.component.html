@@ -20,64 +20,90 @@
 
   <!-- Indicators by Category -->
   <section class="indicators-section" *ngIf="!loading && categoryGroups.length > 0">
-    <h2>Latest Indicators</h2>
-
-    <div class="category-container" *ngFor="let category of categoryGroups">
-      <div class="category-header" [style.border-left-color]="category.color">
-        <div class="category-title">
-          <span class="category-icon">{{ category.icon }}</span>
-          <h3>{{ category.categoryName }}</h3>
-          <span class="health-badge" [ngClass]="'health-score-' + (category.healthScore >= 65 ? 'good' : category.healthScore >= 50 ? 'fair' : 'poor')">
-            {{ category.healthScore }}/100
-          </span>
-        </div>
+    <div class="section-header">
+      <h2>Latest Indicators</h2>
+      <div class="section-controls">
+        <button class="control-btn" (click)="collapseAllCategories()" title="Collapse All Categories">
+          <span>⏶</span> Collapse All
+        </button>
+        <button class="control-btn" (click)="expandAllCategories()" title="Expand All Categories">
+          <span>⏷</span> Expand All
+        </button>
+        <button class="control-btn primary" (click)="toggleIndicatorsSection()" title="Hide/Show Indicators">
+          <span>{{ showIndicators ? '▼' : '▶' }}</span> {{ showIndicators ? 'Hide' : 'Show' }} Indicators
+        </button>
       </div>
+    </div>
 
-      <div class="indicator-grid">
-        <div class="indicator-card"
-             *ngFor="let indicator of category.indicators"
-             [ngClass]="getSentimentClass(indicator)">
-          <div class="indicator-header">
-            <div class="indicator-name">
-              <h4>{{ indicator.name }}</h4>
-              <span class="indicator-desc">{{ indicator.description }}</span>
-            </div>
-            <div class="trend-indicator" [ngClass]="getTrendClass(indicator)">
-              <span class="trend-icon">{{ getTrendIcon(indicator.trend) }}</span>
-            </div>
-          </div>
-
-          <div class="indicator-value">
-            <span class="current-value">{{ indicator.formattedValue }}</span>
-            <span class="change-value" [ngClass]="getSentimentClass(indicator)">
-              {{ indicator.formattedChange }}
+    <div class="categories-wrapper" *ngIf="showIndicators">
+      <div class="category-container" *ngFor="let category of categoryGroups">
+        <div class="category-header"
+             [style.border-left-color]="category.color"
+             (click)="toggleCategory(category.category)"
+             [ngClass]="{'collapsed': isCategoryCollapsed(category.category)}">
+          <div class="category-title">
+            <span class="collapse-icon">{{ isCategoryCollapsed(category.category) ? '▶' : '▼' }}</span>
+            <span class="category-icon">{{ category.icon }}</span>
+            <h3>{{ category.categoryName }}</h3>
+            <span class="health-badge" [ngClass]="'health-score-' + (category.healthScore >= 65 ? 'good' : category.healthScore >= 50 ? 'fair' : 'poor')">
+              {{ category.healthScore }}/100
             </span>
+            <span class="indicator-count">({{ category.indicators.length }} indicators)</span>
           </div>
+        </div>
 
-          <div class="indicator-assessment">
-            <p class="assessment-status">{{ indicator.currentAssessment }}</p>
-          </div>
-
-          <!-- Enhanced Context Sections -->
-          <div class="indicator-context">
-            <div class="context-section">
-              <h5>💡 What This Means</h5>
-              <p class="context-text">{{ indicator.implications }}</p>
+        <div class="indicator-grid" *ngIf="!isCategoryCollapsed(category.category)">
+          <div class="indicator-card"
+               *ngFor="let indicator of category.indicators"
+               [ngClass]="getSentimentClass(indicator)">
+            <div class="indicator-header">
+              <div class="indicator-name">
+                <h4>{{ indicator.name }}</h4>
+                <span class="indicator-desc">{{ indicator.description }}</span>
+              </div>
+              <div class="trend-indicator" [ngClass]="getTrendClass(indicator)">
+                <span class="trend-icon">{{ getTrendIcon(indicator.trend) }}</span>
+              </div>
             </div>
 
-            <div class="context-section">
-              <h5>⚙️ What Drives This</h5>
-              <p class="context-text">{{ indicator.whatDrivesThis }}</p>
+            <div class="indicator-value">
+              <span class="current-value">{{ indicator.formattedValue }}</span>
+              <span class="change-value" [ngClass]="getSentimentClass(indicator)">
+                {{ indicator.formattedChange }}
+              </span>
             </div>
 
-            <div class="context-section" *ngIf="indicator.benchmarkComparison">
-              <h5>📊 Historical Context</h5>
-              <p class="context-text benchmark">{{ indicator.benchmarkComparison }}</p>
+            <div class="indicator-assessment">
+              <p class="assessment-status">{{ indicator.currentAssessment }}</p>
             </div>
-          </div>
 
-          <div class="indicator-footer">
-            <span class="last-updated">Updated {{ formatDate(indicator.latestDate) }}</span>
+            <!-- Show Details Button -->
+            <button class="details-toggle-btn"
+                    (click)="toggleIndicator(indicator.name); $event.stopPropagation()">
+              {{ isIndicatorExpanded(indicator.name) ? '▲ Hide Details' : '▼ Show Details' }}
+            </button>
+
+            <!-- Enhanced Context Sections - Collapsed by default -->
+            <div class="indicator-context" *ngIf="isIndicatorExpanded(indicator.name)">
+              <div class="context-section">
+                <h5>💡 What This Means</h5>
+                <p class="context-text">{{ indicator.implications }}</p>
+              </div>
+
+              <div class="context-section">
+                <h5>⚙️ What Drives This</h5>
+                <p class="context-text">{{ indicator.whatDrivesThis }}</p>
+              </div>
+
+              <div class="context-section" *ngIf="indicator.benchmarkComparison">
+                <h5>📊 Historical Context</h5>
+                <p class="context-text benchmark">{{ indicator.benchmarkComparison }}</p>
+              </div>
+            </div>
+
+            <div class="indicator-footer">
+              <span class="last-updated">Updated {{ formatDate(indicator.latestDate) }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -110,19 +136,26 @@
   </section>
 
   <!-- Charts -->
-  <section class="charts-section" *ngIf="!loading && trendData.length > 0">
-    <div class="chart-container" *ngFor="let trend of trendData">
-      <app-indicator-chart
-        [seriesData]="trend"
-        [height]="300">
-      </app-indicator-chart>
-      <app-chart-insight
-        [seriesData]="trend">
-      </app-chart-insight>
+  <section class="charts-section" *ngIf="!loading">
+    <div *ngIf="chartsLoading" class="charts-loading">
+      <div class="spinner-small"></div>
+      <p>Updating charts...</p>
+    </div>
+
+    <div *ngIf="!chartsLoading && trendData.length > 0">
+      <div class="chart-container" *ngFor="let trend of trendData">
+        <app-indicator-chart
+          [seriesData]="trend"
+          [height]="300">
+        </app-indicator-chart>
+        <app-chart-insight
+          [seriesData]="trend">
+        </app-chart-insight>
+      </div>
+    </div>
+
+    <div *ngIf="!chartsLoading && trendData.length === 0" class="no-data">
+      <p>No data available for the selected criteria. Try adjusting your filters.</p>
     </div>
   </section>
-
-  <div *ngIf="!loading && trendData.length === 0" class="no-data">
-    <p>No data available for the selected criteria. Try adjusting your filters.</p>
-  </div>
 </div>
