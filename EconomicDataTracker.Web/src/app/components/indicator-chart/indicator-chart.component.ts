@@ -205,10 +205,10 @@ export class IndicatorChartComponent implements OnChanges {
       return;
     }
 
-    // Calculate trend from latest vs previous value
+    // Calculate trend over the entire visible period (not just latest two points)
     const latest = data[data.length - 1];
-    const previous = data[data.length - 2];
-    const changePercent = ((latest - previous) / previous) * 100;
+    const oldest = data[0]; // Use first point in visible range, not just previous
+    const changePercent = ((latest - oldest) / oldest) * 100;
 
     // Determine trend
     let trend: 'up' | 'down' | 'stable';
