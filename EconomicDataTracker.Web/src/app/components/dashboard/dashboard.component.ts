@@ -44,7 +44,13 @@ export class DashboardComponent implements OnInit {
   startDate?: Date;
   endDate?: Date;
   loading: boolean = true;
+  chartsLoading: boolean = false; // Separate loading for charts only
   error: string = '';
+
+  // Collapsible state management
+  collapsedCategories: Set<string> = new Set();
+  expandedIndicators: Set<string> = new Set();
+  showIndicators: boolean = true; // Show/hide entire indicators section
 
   periodOptions = [
     { value: '1month', label: '1 Month' },
@@ -62,6 +68,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadSavedState();
     this.loadDashboardData();
   }
 
@@ -108,18 +115,20 @@ export class DashboardComponent implements OnInit {
   }
 
   loadTrends(): void {
-    this.loading = true;
+    this.chartsLoading = true; // Use separate loading state for charts
     const ids = this.selectedSeriesIds.length > 0 ? this.selectedSeriesIds : undefined;
 
     this.economicDataService.getTrends(ids, this.selectedPeriod).subscribe({
       next: (trends) => {
         this.trendData = trends;
-        this.loading = false;
+        this.chartsLoading = false;
+        // Scroll to charts section smoothly after data loads
+        setTimeout(() => this.scrollToCharts(), 100);
       },
       error: (err) => {
         this.error = 'Failed to load trend data';
         console.error('Error loading trends:', err);
-        this.loading = false;
+        this.chartsLoading = false;
       }
     });
   }
@@ -178,5 +187,87 @@ export class DashboardComponent implements OnInit {
 
   getTrendClass(indicator: EnrichedIndicator): string {
     return `trend-${indicator.trend}`;
+  }
+
+  // Collapse/Expand functionality
+  toggleCategory(category: string): void {
+    if (this.collapsedCategories.has(category)) {
+      this.collapsedCategories.delete(category);
+    } else {
+      this.collapsedCategories.add(category);
+    }
+    this.saveState();
+  }
+
+  isCategoryCollapsed(category: string): boolean {
+    return this.collapsedCategories.has(category);
+  }
+
+  toggleIndicator(indicatorName: string): void {
+    if (this.expandedIndicators.has(indicatorName)) {
+      this.expandedIndicators.delete(indicatorName);
+    } else {
+      this.expandedIndicators.add(indicatorName);
+    }
+    this.saveState();
+  }
+
+  isIndicatorExpanded(indicatorName: string): boolean {
+    return this.expandedIndicators.has(indicatorName);
+  }
+
+  toggleIndicatorsSection(): void {
+    this.showIndicators = !this.showIndicators;
+    this.saveState();
+  }
+
+  collapseAllCategories(): void {
+    this.categoryGroups.forEach(group => {
+      this.collapsedCategories.add(group.category);
+    });
+    this.saveState();
+  }
+
+  expandAllCategories(): void {
+    this.collapsedCategories.clear();
+    this.saveState();
+  }
+
+  scrollToCharts(): void {
+    const chartsSection = document.querySelector('.charts-section');
+    if (chartsSection) {
+      chartsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // LocalStorage persistence
+  private loadSavedState(): void {
+    try {
+      const savedCollapsedCategories = localStorage.getItem('dashboard_collapsedCategories');
+      const savedExpandedIndicators = localStorage.getItem('dashboard_expandedIndicators');
+      const savedShowIndicators = localStorage.getItem('dashboard_showIndicators');
+
+      if (savedCollapsedCategories) {
+        this.collapsedCategories = new Set(JSON.parse(savedCollapsedCategories));
+      }
+      if (savedExpandedIndicators) {
+        this.expandedIndicators = new Set(JSON.parse(savedExpandedIndicators));
+      }
+      if (savedShowIndicators !== null) {
+        this.showIndicators = JSON.parse(savedShowIndicators);
+      }
+    } catch (e) {
+      console.warn('Failed to load saved dashboard state:', e);
+    }
+  }
+
+  private saveState(): void {
+    try {
+      localStorage.setItem('dashboard_collapsedCategories', JSON.stringify(Array.from(this.collapsedCategories)));
+      localStorage.setItem('dashboard_expandedIndicators', JSON.stringify(Array.from(this.expandedIndicators)));
+      localStorage.setItem('dashboard_showIndicators', JSON.stringify(this.showIndicators));
+    } catch (e) {
+      console.warn('Failed to save dashboard state:', e);
+    }
   }
 }
