@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EconomicDataService } from '../../services/economic-data.service';
 import { IndicatorInterpretationService } from '../../services/indicator-interpretation.service';
+import { CorrelationAnalysisService } from '../../services/correlation-analysis.service';
+import { ActionRecommendationService } from '../../services/action-recommendation.service';
 import {
   DashboardSummary,
   EnrichedIndicator,
@@ -11,11 +13,15 @@ import {
 } from '../../models/dashboard-summary.model';
 import { Series } from '../../models/series.model';
 import { SeriesWithObservations } from '../../models/series-with-observations.model';
+import { CorrelationAnalysis } from '../../models/correlation.model';
+import { ActionPlan, UserProfile } from '../../models/action-recommendation.model';
 import { IndicatorChartComponent } from '../indicator-chart/indicator-chart.component';
 import { SeriesSelectorComponent } from '../series-selector/series-selector.component';
 import { DateRangeFilterComponent } from '../date-range-filter/date-range-filter.component';
 import { KeyInsightsComponent } from '../key-insights/key-insights.component';
 import { ChartInsightComponent } from '../chart-insight/chart-insight.component';
+import { CorrelationInsightsComponent } from '../correlation-insights/correlation-insights.component';
+import { ActionRecommendationsComponent } from '../action-recommendations/action-recommendations.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +33,9 @@ import { ChartInsightComponent } from '../chart-insight/chart-insight.component'
     SeriesSelectorComponent,
     DateRangeFilterComponent,
     KeyInsightsComponent,
-    ChartInsightComponent
+    ChartInsightComponent,
+    CorrelationInsightsComponent,
+    ActionRecommendationsComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -47,6 +55,11 @@ export class DashboardComponent implements OnInit {
   chartsLoading: boolean = false; // Separate loading for charts only
   error: string = '';
 
+  // Correlation and Action Plan
+  correlationAnalysis: CorrelationAnalysis | null = null;
+  actionPlan: ActionPlan | null = null;
+  selectedUserProfile: UserProfile = 'general';
+
   // Collapsible state management
   collapsedCategories: Set<string> = new Set();
   expandedIndicators: Set<string> = new Set();
@@ -64,7 +77,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private economicDataService: EconomicDataService,
-    private interpretationService: IndicatorInterpretationService
+    private interpretationService: IndicatorInterpretationService,
+    private correlationService: CorrelationAnalysisService,
+    private actionRecommendationService: ActionRecommendationService
   ) { }
 
   ngOnInit(): void {
@@ -117,6 +132,12 @@ export class DashboardComponent implements OnInit {
 
         // Generate economic health summary
         this.healthSummary = this.interpretationService.generateEconomicHealth(this.enrichedIndicators);
+
+        // Generate correlation analysis
+        this.correlationAnalysis = this.correlationService.analyzeCorrelations(this.enrichedIndicators);
+
+        // Generate action plan based on user profile
+        this.updateActionPlan();
 
         summaryLoaded = true;
         checkLoadingComplete();
@@ -261,6 +282,7 @@ export class DashboardComponent implements OnInit {
       const savedCollapsedCategories = localStorage.getItem('dashboard_collapsedCategories');
       const savedExpandedIndicators = localStorage.getItem('dashboard_expandedIndicators');
       const savedShowIndicators = localStorage.getItem('dashboard_showIndicators');
+      const savedUserProfile = localStorage.getItem('dashboard_userProfile');
 
       if (savedCollapsedCategories) {
         this.collapsedCategories = new Set(JSON.parse(savedCollapsedCategories));
@@ -270,6 +292,9 @@ export class DashboardComponent implements OnInit {
       }
       if (savedShowIndicators !== null) {
         this.showIndicators = JSON.parse(savedShowIndicators);
+      }
+      if (savedUserProfile) {
+        this.selectedUserProfile = savedUserProfile as UserProfile;
       }
     } catch (e) {
       console.warn('Failed to load saved dashboard state:', e);
@@ -281,8 +306,25 @@ export class DashboardComponent implements OnInit {
       localStorage.setItem('dashboard_collapsedCategories', JSON.stringify(Array.from(this.collapsedCategories)));
       localStorage.setItem('dashboard_expandedIndicators', JSON.stringify(Array.from(this.expandedIndicators)));
       localStorage.setItem('dashboard_showIndicators', JSON.stringify(this.showIndicators));
+      localStorage.setItem('dashboard_userProfile', this.selectedUserProfile);
     } catch (e) {
       console.warn('Failed to save dashboard state:', e);
+    }
+  }
+
+  onUserProfileChange(profile: UserProfile): void {
+    this.selectedUserProfile = profile;
+    this.updateActionPlan();
+    this.saveState();
+  }
+
+  private updateActionPlan(): void {
+    if (this.correlationAnalysis && this.enrichedIndicators.length > 0) {
+      this.actionPlan = this.actionRecommendationService.generateActionPlan(
+        this.enrichedIndicators,
+        this.correlationAnalysis,
+        this.selectedUserProfile
+      );
     }
   }
 }
