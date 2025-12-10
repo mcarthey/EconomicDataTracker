@@ -1,0 +1,89 @@
+<div class="action-recommendations" *ngIf="actionPlan">
+  <!-- Header with Profile Selector -->
+  <div class="recommendations-header">
+    <div class="header-top">
+      <h2>💡 Recommended Actions</h2>
+      <div class="profile-selector">
+        <label for="profile-select">Your Profile:</label>
+        <select
+          id="profile-select"
+          [(ngModel)]="selectedProfile"
+          (ngModelChange)="onProfileChange($event)"
+          class="profile-dropdown">
+          <option *ngFor="let profile of profiles" [value]="profile">
+            {{ profileLabels[profile] }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="action-summary">
+      <p class="summary-text">{{ actionPlan.summary }}</p>
+    </div>
+
+    <!-- Economic Outlook -->
+    <div class="economic-outlook">
+      <strong>📊 Economic Outlook:</strong>
+      <p>{{ actionPlan.economicOutlook }}</p>
+    </div>
+  </div>
+
+  <!-- Recommendations by Category -->
+  <div class="recommendations-content" *ngIf="actionPlan.recommendations.length > 0">
+    <div class="category-section" *ngFor="let category of getUniqueCategories()">
+      <h3 class="category-title">
+        {{ getCategoryIcon(category) }}
+        {{ getCategoryDisplayName(category) }}
+      </h3>
+
+      <div class="recommendations-grid">
+        <div class="recommendation-card"
+             *ngFor="let rec of getRecommendationsByCategory(category)"
+             [ngClass]="getPriorityClass(rec.priority)"
+             (click)="toggleRecommendation(rec.id)">
+
+          <!-- Card Header -->
+          <div class="card-header">
+            <div class="card-title-row">
+              <span class="priority-icon">{{ getPriorityIcon(rec.priority) }}</span>
+              <h4 class="card-title">{{ rec.title }}</h4>
+              <span class="expand-icon">{{ isExpanded(rec.id) ? '▼' : '▶' }}</span>
+            </div>
+            <div class="card-badges">
+              <span class="timeframe-badge">{{ getTimeframeLabel(rec.timeframe) }}</span>
+              <span class="priority-badge" [innerText]="rec.priority.toUpperCase()"></span>
+            </div>
+          </div>
+
+          <!-- Card Description -->
+          <p class="card-description">{{ rec.description }}</p>
+
+          <!-- Expanded Content -->
+          <div class="card-details" *ngIf="isExpanded(rec.id)">
+            <!-- Reasoning -->
+            <div class="detail-section">
+              <strong>📋 Why This Matters:</strong>
+              <p>{{ rec.reasoning }}</p>
+            </div>
+
+            <!-- Relevant Indicators -->
+            <div class="detail-section">
+              <strong>📊 Based On:</strong>
+              <div class="indicator-chips">
+                <span class="indicator-chip" *ngFor="let indicator of rec.relevantIndicators">
+                  {{ indicator }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="actionPlan.recommendations.length === 0">
+    <p>✓ No urgent actions required for your profile. Economic conditions appear stable for your situation.</p>
+  </div>
+</div>

@@ -18,6 +18,19 @@
     <app-key-insights [healthSummary]="healthSummary"></app-key-insights>
   </section>
 
+  <!-- Correlation Analysis Section -->
+  <section *ngIf="!loading && correlationAnalysis">
+    <app-correlation-insights [analysis]="correlationAnalysis"></app-correlation-insights>
+  </section>
+
+  <!-- Action Recommendations Section -->
+  <section *ngIf="!loading && actionPlan">
+    <app-action-recommendations
+      [actionPlan]="actionPlan"
+      (profileChange)="onUserProfileChange($event)">
+    </app-action-recommendations>
+  </section>
+
   <!-- Indicators by Category -->
   <section class="indicators-section" *ngIf="!loading && categoryGroups.length > 0">
     <div class="section-header">

@@ -1,0 +1,60 @@
+<div class="correlation-insights" *ngIf="analysis">
+  <!-- Summary Section -->
+  <div class="insights-header">
+    <div class="header-content">
+      <h2>🔗 Correlation Analysis</h2>
+      <div class="risk-badge" [ngClass]="getRiskClass(analysis.overallRisk)">
+        {{ analysis.overallRisk.toUpperCase() }} RISK
+      </div>
+    </div>
+    <p class="summary-text">{{ analysis.summary }}</p>
+  </div>
+
+  <!-- Patterns Grid -->
+  <div class="patterns-grid" *ngIf="analysis.patterns.length > 0 && !collapsed">
+    <div class="pattern-card"
+         *ngFor="let pattern of analysis.patterns"
+         [ngClass]="[getSeverityClass(pattern.severity), getTypeClass(pattern.type)]">
+
+      <!-- Pattern Header -->
+      <div class="pattern-header">
+        <h3 class="pattern-title">{{ pattern.title }}</h3>
+        <div class="pattern-badges">
+          <span class="confidence-badge" [ngClass]="getConfidenceClass(pattern.confidence)">
+            {{ getConfidenceBadge(pattern.confidence) }} Confidence
+          </span>
+        </div>
+      </div>
+
+      <!-- Pattern Description -->
+      <p class="pattern-description">{{ pattern.description }}</p>
+
+      <!-- Economic Signal -->
+      <div class="economic-signal">
+        <strong>📊 Economic Signal:</strong>
+        <p>{{ pattern.economicSignal }}</p>
+      </div>
+
+      <!-- Historical Context -->
+      <div class="historical-context" *ngIf="pattern.historicalContext">
+        <strong>📚 Historical Context:</strong>
+        <p>{{ pattern.historicalContext }}</p>
+      </div>
+
+      <!-- Related Indicators -->
+      <div class="related-indicators">
+        <strong>Related Indicators:</strong>
+        <div class="indicator-chips">
+          <span class="indicator-chip" *ngFor="let indicator of pattern.indicators">
+            {{ indicator }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="analysis.patterns.length === 0">
+    <p>✓ No significant correlation patterns detected. Economic indicators are showing independent trends.</p>
+  </div>
+</div>
