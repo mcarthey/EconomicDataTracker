@@ -76,6 +76,15 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
+    let seriesLoaded = false;
+    let summaryLoaded = false;
+
+    const checkLoadingComplete = () => {
+      if (seriesLoaded && summaryLoaded) {
+        this.loading = false;
+      }
+    };
+
     // Load all series
     this.economicDataService.getAllSeries(true).subscribe({
       next: (series) => {
@@ -83,6 +92,8 @@ export class DashboardComponent implements OnInit {
         // Default to first 3 series for initial chart
         this.selectedSeriesIds = series.slice(0, 3).map(s => s.id);
         this.loadTrends();
+        seriesLoaded = true;
+        checkLoadingComplete();
       },
       error: (err) => {
         this.error = 'Failed to load series data';
@@ -106,10 +117,14 @@ export class DashboardComponent implements OnInit {
 
         // Generate economic health summary
         this.healthSummary = this.interpretationService.generateEconomicHealth(this.enrichedIndicators);
+
+        summaryLoaded = true;
+        checkLoadingComplete();
       },
       error: (err) => {
         this.error = 'Failed to load dashboard summary';
         console.error('Error loading summary:', err);
+        this.loading = false;
       }
     });
   }
